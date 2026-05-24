@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Require Hub v6 — Enterprise Production Build</title>
+    <title>Require Hub v6 — Custom Official Production Build</title>
     <style>
         /* =========================================================================
-           1. CORE CONFIGURATIONS & DESIGN THEME ENGINE
+           1. CORE CONFIGURATIONS & BLACK-AND-BLUE THEME ENGINE
            ========================================================================= */
         :root {
-            --bg-dark-primary: #040406;
-            --bg-dark-secondary: #08080c;
-            --bg-glass-panel: rgba(11, 11, 16, 0.72);
-            --bg-editor-canvas: #020203;
-            --border-glow-cyan: rgba(0, 168, 255, 0.18);
+            --bg-dark-primary: #020204;       /* Deep obsidian black */
+            --bg-dark-secondary: #05070f;     /* Midnight blue undertone */
+            --bg-glass-panel: rgba(6, 8, 14, 0.85); /* Smooth translucent dark blue-black */
+            --bg-editor-canvas: #010205;      /* True black for high code contrast */
+            --border-glow-cyan: rgba(0, 168, 255, 0.25); /* Vibrant blue border aura */
             --border-glow-green: rgba(0, 255, 136, 0.2);
-            --accent-cyan: #00a8ff;
-            --accent-cyan-hover: #0097e6;
+            --accent-cyan: #00a8ff;           /* Electric blue */
+            --accent-cyan-hover: #3faeff;     /* Radiant blue highlight */
             --accent-green: #00ff88;
             --accent-green-hover: #00cc6e;
             --accent-red: #ff4757;
             --accent-yellow: #ffa502;
             --text-pure-white: #ffffff;
-            --text-muted-gray: #718093;
+            --text-muted-gray: #5f7590;       /* Slate blue-gray for secondary elements */
             --font-stack-main: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
             --font-stack-code: 'Consolas', 'Fira Code', 'Courier New', monospace;
         }
@@ -65,27 +65,30 @@
             height: 100%;
             top: 0;
             left: 0;
-            background: radial-gradient(circle at center, rgba(0, 168, 255, 0.03) 0%, rgba(4, 4, 6, 0.96) 85%);
+            background: radial-gradient(circle at center, rgba(0, 85, 255, 0.08) 0%, rgba(2, 2, 4, 0.98) 90%);
             z-index: 2;
             pointer-events: none;
         }
 
         /* =========================================================================
-           3. APPLICATION MAIN WRAPPER WINDOW FRAME
+           3. EXPANDED APPLICATION MAIN WRAPPER WINDOW FRAME
            ========================================================================= */
         .app-window-shell {
             position: relative;
             z-index: 10;
             background: var(--bg-glass-panel);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), 0 0 60px rgba(0, 168, 255, 0.04);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
+            border: 1px solid rgba(0, 168, 255, 0.15); /* Techy blue outer outline */
+            border-radius: 14px;
+            box-shadow: 0 40px 90px rgba(0, 0, 0, 0.95), 0 0 70px rgba(0, 168, 255, 0.06);
             color: var(--text-pure-white);
             overflow: hidden;
-            width: 860px;
-            height: 540px;
+            
+            /* Big Premium Scale Footprint */
+            width: 1100px;  
+            height: 680px;  
+            
             display: flex;
             flex-direction: column;
             transform: scale(1);
@@ -95,57 +98,57 @@
 
         /* Top Action Bar Component */
         .window-topbar-container {
-            background: rgba(13, 13, 18, 0.92);
-            padding: 16px 24px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            background: rgba(4, 5, 10, 0.95);
+            padding: 18px 26px;
+            border-bottom: 1px solid rgba(0, 168, 255, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .topbar-identity-cluster {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--accent-cyan);
             font-weight: 700;
             letter-spacing: 2px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             text-transform: uppercase;
         }
 
-        /* Dynamic Image / Logo Layout Holder */
+        /* Dynamic Image Logo Configuration */
         .topbar-identity-cluster img {
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             border: 1px solid var(--accent-cyan);
-            box-shadow: 0 0 10px rgba(0, 168, 255, 0.4);
+            box-shadow: 0 0 12px rgba(0, 168, 255, 0.5);
             object-fit: cover;
         }
 
         .topbar-window-controls {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
 
         .window-control-circle {
-            width: 12px;
-            height: 12px;
+            width: 13px;
+            height: 13px;
             border-radius: 50%;
             cursor: pointer;
             transition: opacity 0.15s ease, transform 0.1s ease;
         }
         .window-control-circle:hover { 
             opacity: 0.8; 
-            transform: scale(1.1);
+            transform: scale(1.15);
         }
         .window-control-circle.close-proc { background: var(--accent-red); }
         .window-control-circle.min-proc { background: var(--accent-yellow); }
         .window-control-circle.max-proc { background: #27c93f; }
 
         /* =========================================================================
-           4. STAGE VIEWPORT 1: SECURE ACCREDITATION SYSTEM (AUTHENTICATION)
+           4. STAGE VIEWPORT 1: SECURE AUTHENTICATION SYSTEM (SMOOTH DARK)
            ========================================================================= */
         .auth-viewport-wrapper {
             display: flex;
@@ -159,69 +162,69 @@
 
         /* Logo Element Profile Image Box */
         .auth-branding-logo {
-            width: 95px;
-            height: 95px;
+            width: 105px;
+            height: 105px;
             border-radius: 50%;
             border: 2px solid var(--accent-cyan);
-            margin-bottom: 24px;
-            box-shadow: 0 0 30px rgba(0, 168, 255, 0.3);
+            margin-bottom: 28px;
+            box-shadow: 0 0 35px rgba(0, 168, 255, 0.35);
             object-fit: cover;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .auth-viewport-wrapper h2 {
-            font-size: 1.6rem;
-            margin-bottom: 8px;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
             font-weight: 600;
             letter-spacing: 0.5px;
         }
 
         .auth-viewport-subtext {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-muted-gray);
-            margin-bottom: 32px;
+            margin-bottom: 36px;
         }
 
         .auth-form-engine-module {
             width: 100%;
-            max-width: 350px;
+            max-width: 380px;
         }
 
         .form-input-node {
             width: 100%;
-            padding: 13px 18px;
-            background: rgba(0, 0, 0, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
+            padding: 14px 20px;
+            background: rgba(1, 2, 5, 0.7);
+            border: 1px solid rgba(0, 168, 255, 0.15);
+            border-radius: 8px;
             color: #fff;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             outline: none;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .form-input-node:focus {
             border-color: var(--accent-cyan);
-            background: rgba(0, 168, 255, 0.01);
-            box-shadow: 0 0 12px rgba(0, 168, 255, 0.15);
+            background: rgba(0, 168, 255, 0.02);
+            box-shadow: 0 0 14px rgba(0, 168, 255, 0.25);
         }
 
         .form-submit-trigger-node {
             width: 100%;
-            padding: 13px;
+            padding: 14px;
             background: var(--accent-cyan);
             color: #fff;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 1rem;
             cursor: pointer;
             transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
         }
 
         .form-submit-trigger-node:hover {
             background: var(--accent-cyan-hover);
-            box-shadow: 0 0 22px rgba(0, 168, 255, 0.4);
+            box-shadow: 0 0 25px rgba(0, 168, 255, 0.45);
         }
         
         .form-submit-trigger-node:active {
@@ -229,8 +232,8 @@
         }
 
         .form-interactive-toggle-footer {
-            margin-top: 26px;
-            font-size: 0.8rem;
+            margin-top: 28px;
+            font-size: 0.85rem;
             color: var(--text-muted-gray);
         }
 
@@ -242,38 +245,38 @@
         .form-interactive-toggle-footer span:hover { text-decoration: underline; }
 
         /* =========================================================================
-           5. STAGE VIEWPORT 2: PRODUCTION RUNTIME ENVIRONMENT (REQUIRE HUB MAIN PANEL)
+           5. STAGE VIEWPORT 2: MAIN EXECUTOR WORKSPACE MODULES
            ========================================================================= */
         .runtime-viewport-wrapper {
-            display: none; /* Synchronized into workspace layout matrix by JS system flow */
+            display: none; 
             flex-grow: 1;
-            grid-template-columns: 75px 210px 1fr;
-            height: calc(100% - 57px);
+            grid-template-columns: 85px 260px 1fr; /* Wider sidebar elements */
+            height: calc(100% - 65px);
         }
 
-        /* SECTOR 1: SIDE BAR NAV UTILITY TAB SECTOR */
+        /* SECTOR A: NAVIGATION ICON COLUMN SIDEBAR */
         .ribbon-action-sidebar {
-            background: rgba(11, 11, 15, 0.85);
-            border-right: 1px solid rgba(255, 255, 255, 0.03);
+            background: rgba(4, 5, 9, 0.9);
+            border-right: 1px solid rgba(0, 168, 255, 0.08);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 26px 0;
-            gap: 24px;
+            padding: 28px 0;
+            gap: 26px;
         }
 
         .sidebar-action-tab-button {
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             background: rgba(255, 255, 255, 0.01);
             border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 8px;
+            border-radius: 10px;
             color: var(--text-muted-gray);
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 700;
             letter-spacing: 0.5px;
             transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -282,29 +285,29 @@
         .sidebar-action-tab-button.active, .sidebar-action-tab-button:hover {
             color: var(--accent-cyan);
             border-color: var(--accent-cyan);
-            background: rgba(0, 168, 255, 0.05);
-            box-shadow: 0 0 14px rgba(0, 168, 255, 0.18);
+            background: rgba(0, 168, 255, 0.06);
+            box-shadow: 0 0 16px rgba(0, 168, 255, 0.25);
         }
 
         .sidebar-action-tab-button.disconnect-kill-switch {
             margin-top: auto;
             color: var(--accent-red);
-            border-color: rgba(255, 71, 87, 0.18);
+            border-color: rgba(255, 71, 87, 0.2);
         }
         .sidebar-action-tab-button.disconnect-kill-switch:hover {
             background: rgba(255, 71, 87, 0.12);
             border-color: var(--accent-red);
-            box-shadow: 0 0 14px rgba(255, 71, 87, 0.25);
+            box-shadow: 0 0 16px rgba(255, 71, 87, 0.3);
         }
 
-        /* SECTOR 2: DIRECTORY ARCHIVE SYSTEM TREE GRID */
+        /* SECTOR B: DIRECTORY SCRIPTS LIST ARRAY PANELS */
         .directory-manifest-panel {
-            background: rgba(6, 6, 9, 0.7);
-            border-right: 1px solid rgba(255, 255, 255, 0.03);
-            padding: 22px 14px;
+            background: rgba(2, 3, 6, 0.85);
+            border-right: 1px solid rgba(0, 168, 255, 0.08);
+            padding: 24px 16px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             overflow-y: auto;
         }
 
@@ -312,27 +315,27 @@
             width: 4px;
         }
         .directory-manifest-panel::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(0, 168, 255, 0.15);
             border-radius: 10px;
         }
 
         .directory-header-node-title {
-            font-size: 0.7rem;
-            color: #57606f;
+            font-size: 0.75rem;
+            color: #4b6584;
             text-transform: uppercase;
             font-weight: 800;
             letter-spacing: 1.5px;
             padding-left: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .directory-list-script-item {
-            padding: 11px 14px;
-            background: rgba(255, 255, 255, 0.01);
+            padding: 14px 18px;
+            background: rgba(0, 168, 255, 0.01);
             border: 1px solid transparent;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            color: #f5f6fa;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #e3edfa;
             cursor: pointer;
             text-align: left;
             white-space: nowrap;
@@ -342,29 +345,29 @@
         }
 
         .directory-list-script-item:hover {
-            background: rgba(255, 255, 255, 0.03);
-            border-color: rgba(255, 255, 255, 0.07);
-            padding-left: 18px;
+            background: rgba(0, 168, 255, 0.03);
+            border-color: rgba(0, 168, 255, 0.15);
+            padding-left: 22px;
             color: #ffffff;
         }
 
-        /* SECTOR 3: MAIN DEVELOPMENT WORKSPACE (EDITOR FRAME BLOCK) */
+        /* SECTOR C: SCALED INDUSTRIAL DEVELOPMENT TEXT EDITOR CANVAS */
         .workspace-terminal-panel {
-            padding: 22px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            background: #040407;
+            gap: 18px;
+            background: #010204;
         }
 
         .workspace-editor-canvas-box {
             flex-grow: 1;
             background: var(--bg-editor-canvas);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 6px;
-            padding: 16px;
+            border: 1px solid rgba(0, 168, 255, 0.08);
+            border-radius: 8px;
+            padding: 18px;
             display: flex;
-            gap: 16px;
+            gap: 18px;
             overflow: hidden;
             position: relative;
         }
@@ -372,9 +375,9 @@
         .editor-line-number-gutter {
             text-align: right;
             font-family: var(--font-stack-code);
-            font-size: 0.85rem;
-            color: #2c2c3e;
-            line-height: 1.5;
+            font-size: 1.05rem; /* Upgraded font sizing */
+            color: #1e2d42;     /* Clear blue-tinted gutters */
+            line-height: 1.6;
             user-select: none;
         }
 
@@ -385,15 +388,15 @@
             outline: none;
             color: var(--accent-cyan);
             font-family: var(--font-stack-code);
-            font-size: 0.85rem;
+            font-size: 1.05rem; /* Upgraded code scaling size */
             resize: none;
-            line-height: 1.5;
+            line-height: 1.6;
             white-space: pre;
             overflow-x: auto;
             overflow-y: auto;
         }
 
-        /* Workspace Core Actions Bar */
+        /* Workspace Footer Operational Layout Controls */
         .workspace-operations-row {
             display: flex;
             justify-content: space-between;
@@ -402,24 +405,24 @@
 
         .operations-action-cluster-nodes {
             display: flex;
-            gap: 12px;
+            gap: 14px;
         }
 
         .operation-execution-button {
-            padding: 11px 24px;
-            font-size: 0.8rem;
+            padding: 12px 28px;
+            font-size: 0.85rem;
             font-weight: 700;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 168, 255, 0.2);
             background: rgba(255, 255, 255, 0.01);
             color: #ffffff;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.15s ease;
         }
 
         .operation-execution-button:hover {
-            background: rgba(255, 255, 255, 0.07);
-            border-color: rgba(255, 255, 255, 0.12);
+            background: rgba(0, 168, 255, 0.05);
+            border-color: rgba(0, 168, 255, 0.35);
         }
 
         .operation-execution-button.primary-payload-fire {
@@ -430,11 +433,11 @@
 
         .operation-execution-button.primary-payload-fire:hover {
             background: var(--accent-cyan-hover);
-            box-shadow: 0 0 16px rgba(0, 168, 255, 0.35);
+            box-shadow: 0 0 20px rgba(0, 168, 255, 0.45);
         }
 
         .telemetry-stream-pipeline-status-text {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--text-muted-gray);
             font-family: var(--font-stack-code);
             display: flex;
@@ -447,36 +450,36 @@
             font-weight: 700;
         }
 
-        /* SYSTEM CORE VISIBILITY MODIFIERS */
+        /* ENGINE ACCESSIBILITY HELPERS */
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <!-- DIGITAL SPATIAL CONNECTED VECTOR POINT DATA Canvas Engine -->
+    <!-- CORE INTERPOLATIVE GEOMETRIC BACKGROUND GRID CANVAS -->
     <canvas id="bgCanvas"></canvas>
     <div class="ambient-vignette"></div>
 
-    <!-- MAIN SYSTEM INTERACTION CORE ARCHITECTURE PANEL -->
+    <!-- MAIN SYSTEM CORE INTERACTION WINDOW WRAPPER -->
     <div class="app-window-shell" id="appRootWindowFrameBox">
         
-        <!-- WINDOW INTERACTION TOPBAR PANEL CONTAINER -->
+        <!-- FRAME CONTROLLER HEADER DESKTOP BAR -->
         <div class="window-topbar-container">
             <div class="topbar-identity-cluster">
-                <!-- Replace with your server profile layout image asset path link -->
-                <img src="https://via.placeholder.com/50/00a8ff/ffffff?text=RH" alt="Require Hub Icon Avatar" id="windowGlobalProfileLogo">
+                <!-- Change this src property link path to map out your real asset logo files -->
+                <img src="https://via.placeholder.com/50/00a8ff/ffffff?text=RH" alt="Require Hub Identity Hub Logo" id="windowGlobalProfileLogo">
                 <span id="windowDisplayDynamicTitle">Require Hub v6 // Connection Portal</span>
             </div>
             <div class="topbar-window-controls">
-                <div class="window-control-circle close-proc" onclick="closeApplicationContextFrame()" title="Terminate Process Environment"></div>
-                <div class="window-control-circle min-proc" onclick="minimizeApplicationContextFrame()" title="Suspend Allocations View"></div>
-                <div class="window-control-circle max-proc" onclick="maximizeApplicationContextFrame()" title="Scale Memory Workspace View"></div>
+                <div class="window-control-circle close-proc" onclick="closeApplicationContextFrame()" title="Terminate Engine Process Core"></div>
+                <div class="window-control-circle min-proc" onclick="minimizeApplicationContextFrame()" title="Suspend Allocations Frame"></div>
+                <div class="window-control-circle max-proc" onclick="maximizeApplicationContextFrame()" title="Optimize Memory View Boundaries"></div>
             </div>
         </div>
 
-        <!-- APP INTERACTION VIEWPORT STAGE 1: AUTHENTICATION INITIALIZATION ENTRY NODE -->
+        <!-- STAGE PORTAL VIEWPORT 1: SECURE ACCREDITATION VERIFICATION (SIGN / LOGIN) -->
         <div class="auth-viewport-wrapper" id="authGatewayStructuralWrapper">
-            <img src="https://via.placeholder.com/150/00a8ff/ffffff?text=V6" class="auth-branding-logo" alt="Branding Loader Logo Container" id="formBrandingDynamicLogo">
+            <img src="https://via.placeholder.com/150/00a8ff/ffffff?text=V6" class="auth-branding-logo" alt="Branding Interface Dynamic Core Loader" id="formBrandingDynamicLogo">
             <h2 id="authGatewayMainHeadingTitleText">Security Clearance Required</h2>
             <p class="auth-viewport-subtext" id="authGatewaySubHeadingText">Establish link sequence to initialization node pipeline.</p>
             
@@ -493,41 +496,42 @@
             </div>
         </div>
 
-        <!-- APP INTERACTION VIEWPORT STAGE 2: SYSTEM RUNTIME INTERACTIVE ENVIRONMENT (THE REQUIRE HUB DESKTOP) -->
+        <!-- STAGE PORTAL VIEWPORT 2: PRODUCTION REAL RUNTIME DESKTOP COMPILATION WORKSPACE -->
         <div class="runtime-viewport-wrapper" id="runtimeWorkspaceStructuralWrapper">
             
-            <!-- COLUMN SECTOR BLOCK A: ACCENTED ICON STRIP TOOLBAR SIDEBAR PANEL -->
+            <!-- SECTION COMPONENT A: SIDE BAR INTERACTION NAVIGATION STRIP STRUT -->
             <div class="ribbon-action-sidebar">
-                <div class="sidebar-action-tab-button active" onclick="handleRuntimeNavigationModuleViewShift(this, 'executor')" title="Workspace Engine Terminal Suite">EXE</div>
-                <div class="sidebar-action-tab-button" onclick="handleRuntimeNavigationModuleViewShift(this, 'scripthub')" title="Central Cloud Index Scripts Library">HUB</div>
-                <div class="sidebar-action-tab-button" onclick="handleRuntimeNavigationModuleViewShift(this, 'settings')" title="Core Interface System Modifications">SET</div>
-                <div class="sidebar-action-tab-button disconnect-kill-switch" onclick="disconnectSystemRuntimePipelineEngine()" title="Disconnect Engine Pipeline Context">SYS</div>
+                <div class="sidebar-action-tab-button active" onclick="handleRuntimeNavigationModuleViewShift(this, 'executor')" title="Workspace Code Playground Engine">EXE</div>
+                <div class="sidebar-action-tab-button" onclick="handleRuntimeNavigationModuleViewShift(this, 'scripthub')" title="Central Cloud Index Scripts Hub Repository">HUB</div>
+                <div class="sidebar-action-tab-button" onclick="handleRuntimeNavigationModuleViewShift(this, 'settings')" title="Core System Environment Configurations">SET</div>
+                <div class="sidebar-action-tab-button disconnect-kill-switch" onclick="disconnectSystemRuntimePipelineEngine()" title="Disconnect Engine Pipeline Runtime Context">SYS</div>
             </div>
 
-            <!-- COLUMN SECTOR BLOCK B: LOCAL CACHED SCRIPTS DIRECTORY MANIFEST BLOCK -->
+            <!-- SECTION COMPONENT B: LOCAL SCRIPTS TREE FILES DIRECTORY DIRECT NODE MANIFEST PANEL -->
             <div class="directory-manifest-panel" id="directoryNodalManifestDeckContainer">
                 <div class="directory-header-node-title" id="directorySectionHeaderLabel">Local Script Cache</div>
-                <!-- Interactive Profile Hook Target Matrix List Arrays -->
+                <!-- Interactive Action Hooks Data Arrays Row items map hooks -->
                 <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('fe_kill')">FE_Kill_Core_v2.lua</div>
                 <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('dex_explorer')">Dex_Explorer_v4.txt</div>
                 <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('server_overload')">Server_Overload_Stack.lua</div>
                 <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('infinite_yield')">Infinite_Yield_Admin.lua</div>
                 <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('orbit_hub')">Orbit_Glow_System.lua</div>
-                <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('f3x_bypass')">F3X_Server_Bypass.lua</div>
-                <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('btools_injector')">BTools_Inventory_Patcher.txt</div>
+                
+                <!-- YOUR EMBEDDED CUSTOM SCRIPT LIST ITEM UI ELEMENT -->
+                <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('my_custom_script')">My_Custom_Script.lua</div>
             </div>
 
-            <!-- COLUMN SECTOR BLOCK C: DATA WORKSPACE EDITABLE ENVIRONMENT (THE LINE NUMBER CODING ENVIRONMENT) -->
+            <!-- SECTION COMPONENT C: LIVE WORKING MONACO CODE TERMINAL HOOK GRID FRAME PLAYGROUND -->
             <div class="workspace-terminal-panel" id="workspaceEditorAreaViewWrapper">
                 <div class="workspace-editor-canvas-box">
-                    <!-- Line-Numbering Counter Simulation Core Tracking Vector Track column -->
+                    <!-- Real Dynamic Line-Numbers Column Index Tracking Array Block -->
                     <div class="editor-line-number-gutter" id="editorLineCounterCanvasGutter">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17</div>
                     
-                    <!-- Textstream Editable Core Node Area box -->
+                    <!-- Text Area Processing Stream Vector Area Block -->
                     <textarea id="workspaceCodeTextAreaStreamSource" spellcheck="false" oninput="executeEditorCanvasLineNumbersRecalculation()">-- Require Hub v6 Active Module Target Pipeline Loader&#10;local RequireEngine = require(8347104819)&#10;RequireEngine.load("MainServerEngine")</textarea>
                 </div>
 
-                <!-- Lower Operations Action Matrix Control Buttons Row bar layout footer -->
+                <!-- Lower Function Buttons Operations Area Console Bar -->
                 <div class="workspace-operations-row">
                     <div class="operations-action-cluster-nodes">
                         <button class="operation-execution-button primary-payload-fire" onclick="fireCompiledScriptPayloadStream()">Execute Script</button>
@@ -542,11 +546,11 @@
     </div>
 
     <!-- =========================================================================
-       6. PROGRAMMATIC FRAMEWORK ENGINE OPERATION PIPELINES (JAVASCRIPT RUNTIME)
-       ========================================================================= */ -->
+       6. CORE JAVASCRIPT PROGRAMMATIC ARCHITECTURE OPERATIONS ENGINES PIPELINES
+       ========================================================================= -->
     <script>
         /* =========================================================================
-           OPERATIONS SECTOR A: RESPONSIVE MATHEMATICAL GEOMETRIC DATA BG MATRIX ENGINE
+           OPERATIONS SECTOR A: MATHEMATICAL PROXEMIC PARTICLE NETWORK BACKGROUND
            ========================================================================= */
         const canvas = document.getElementById('bgCanvas');
         const ctx = canvas.getContext('2d');
@@ -560,44 +564,40 @@
         });
 
         const activeCoordinatesNodeCluster = [];
-        const networkCalculationDensityLimit = 120;
+        const networkCalculationDensityLimit = 125;
 
-        // Provision structural spatial grid locations vectors tracking matrices points
         for (let idx = 0; idx < networkCalculationDensityLimit; idx++) {
             activeCoordinatesNodeCluster.push({
                 spatialX: Math.random() * layoutWidthVector,
                 spatialY: Math.random() * layoutHeightVector,
-                speedX: (Math.random() - 0.5) * 1.6,
-                speedY: (Math.random() - 0.5) * 1.6,
+                speedX: (Math.random() - 0.5) * 1.4,
+                speedY: (Math.random() - 0.5) * 1.4,
                 coordinateRadius: Math.random() * 2 + 1
             });
         }
 
         function systemBackgroundGraphicFrameLoopEngine() {
             ctx.clearRect(0, 0, layoutWidthVector, layoutHeightVector);
-            ctx.fillStyle = "rgba(0, 168, 255, 0.45)";
+            ctx.fillStyle = "rgba(0, 168, 255, 0.4)";
 
-            // Parse structural positional movements vector locations points arrays
             for (let cursorIdx = 0; cursorIdx < activeCoordinatesNodeCluster.length; cursorIdx++) {
                 let movingNode = activeCoordinatesNodeCluster[cursorIdx];
                 movingNode.spatialX += movingNode.speedX;
                 movingNode.spatialY += movingNode.speedY;
 
-                // Handle boundary collisions transitions
                 if (movingNode.spatialX < 0 || movingNode.spatialX > layoutWidthVector) movingNode.speedX *= -1;
                 if (movingNode.spatialY < 0 || movingNode.spatialY > layoutHeightVector) movingNode.speedY *= -1;
 
                 ctx.beginPath();
-                ctx.arc(movingNode.spatialX, movingNode.movingNode = movingNode.spatialY, movingNode.coordinateRadius, 0, Math.PI * 2);
+                ctx.arc(movingNode.spatialX, movingNode.spatialY, movingNode.coordinateRadius, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Compute proxemic coordinate lengths metrics to connect path lines matrices loops
                 for (let relationalCursorIdx = cursorIdx + 1; relationalCursorIdx < activeCoordinatesNodeCluster.length; relationalCursorIdx++) {
                     let benchmarkNode = activeCoordinatesNodeCluster[relationalCursorIdx];
                     let absoluteDistanceHypot = Math.hypot(movingNode.spatialX - benchmarkNode.spatialX, movingNode.spatialY - benchmarkNode.spatialY);
 
-                    if (absoluteDistanceHypot < 130) {
-                        ctx.strokeStyle = `rgba(0, 168, 255, ${1 - (absoluteDistanceHypot / 130) * 0.98})`;
+                    if (absoluteDistanceHypot < 140) {
+                        ctx.strokeStyle = `rgba(0, 140, 255, ${1 - (absoluteDistanceHypot / 140) * 0.95})`;
                         ctx.lineWidth = 0.5;
                         ctx.beginPath();
                         ctx.moveTo(movingNode.spatialX, movingNode.spatialY);
@@ -608,10 +608,10 @@
             }
             requestAnimationFrame(systemBackgroundGraphicFrameLoopEngine);
         }
-        systemBackgroundGraphicFrameLoopEngine(); // Boot real time spatial data visual overlay rendering pipeline
+        systemBackgroundGraphicFrameLoopEngine();
 
         /* =========================================================================
-           OPERATIONS SECTOR B: AUTH REGISTRATION ACCESS PROTOCOL SWITCHBOARD CONTROLLERS
+           OPERATIONS SECTOR B: AUTHENTICATION INTERACTION CONTROLLERS SWITCH HOOKS
            ========================================================================= */
         let stateViewGatewayRegistrationActiveMode = false;
 
@@ -627,7 +627,6 @@
         const workspaceCodeTextAreaStreamSource = document.getElementById('workspaceCodeTextAreaStreamSource');
         const editorLineCounterCanvasGutter = document.getElementById('editorLineCounterCanvasGutter');
         const formBrandingDynamicLogo = document.getElementById('formBrandingDynamicLogo');
-        const windowGlobalProfileLogo = document.getElementById('windowGlobalProfileLogo');
 
         function switchAuthenticationGatewayViewMode() {
             stateViewGatewayRegistrationActiveMode = !stateViewGatewayRegistrationActiveMode;
@@ -639,9 +638,8 @@
                 formFieldIdentityUsernameNode.setAttribute('required', 'true');
                 formActionToggleViewFooterWrapper.innerHTML = `Registered user token instance? <span onclick='switchAuthenticationGatewayViewMode()'>Authorize Security Token</span>`;
                 
-                // Real theme changes when switching mode to represent alternative states dynamically
                 formBrandingDynamicLogo.style.borderColor = "var(--accent-green)";
-                formBrandingDynamicLogo.style.boxShadow = "0 0 30px rgba(0, 255, 136, 0.3)";
+                formBrandingDynamicLogo.style.boxShadow = "0 0 35px rgba(0, 255, 136, 0.35)";
             } else {
                 authGatewayMainHeadingTitleText.innerText = "Security Clearance Required";
                 authGatewaySubHeadingText.innerText = "Establish link sequence to initialization node pipeline.";
@@ -651,21 +649,20 @@
                 formActionToggleViewFooterWrapper.innerHTML = `New instance pipeline structure? <span onclick='switchAuthenticationGatewayViewMode()'>Provision Account Profile</span>`;
                 
                 formBrandingDynamicLogo.style.borderColor = "var(--accent-cyan)";
-                formBrandingDynamicLogo.style.boxShadow = "0 0 30px rgba(0, 168, 255, 0.3)";
+                formBrandingDynamicLogo.style.boxShadow = "0 0 35px rgba(0, 168, 255, 0.35)";
             }
         }
 
         function handleAuthenticationGatewayFormProcessing(event) {
             event.preventDefault();
 
-            // Run mechanical responsive spring bounce layout scale animations transform profiles
-            appRootWindowFrameBox.style.transform = "scale(0.94)";
+            appRootWindowFrameBox.style.transform = "scale(0.95)";
             appRootWindowFrameBox.style.opacity = "0";
 
             setTimeout(() => {
                 authGatewayStructuralWrapper.style.display = "none";
                 runtimeWorkspaceStructuralWrapper.style.display = "grid";
-                windowDisplayDynamicTitle.innerText = "Require Hub v6 // Execution Engine Workspace";
+                windowDisplayDynamicTitle.innerText = "Require Hub v6 // Execution Engine Workspace — Second Branch Official";
                 appRootWindowFrameBox.style.transform = "scale(1)";
                 appRootWindowFrameBox.style.opacity = "1";
                 executeEditorCanvasLineNumbersRecalculation();
@@ -673,7 +670,7 @@
         }
 
         function disconnectSystemRuntimePipelineEngine() {
-            appRootWindowFrameBox.style.transform = "scale(0.94)";
+            appRootWindowFrameBox.style.transform = "scale(0.95)";
             appRootWindowFrameBox.style.opacity = "0";
 
             setTimeout(() => {
@@ -686,7 +683,7 @@
         }
 
         /* =========================================================================
-           OPERATIONS SECTOR C: PRODUCTION EXECUTOR RUNTIME COMPILATION SUITE CONTROLLERS
+           OPERATIONS SECTOR C: DESKTOP CENTRALIZED SYSTEM ASSET SCRIPTS SOURCE STORAGE
            ========================================================================= */
         const internalCentralAssetScriptDatabaseMatrix = {
             fe_kill: `-- Require Hub v6 Active Thread Script\nlocal KillEngineModule = require(7210491842)\nlocal TargetedUsers = {"TargetNameHere"}\n\nKillEngineModule:FireExecutionPayload(TargetedUsers)\nprint("FE Kill Sequence Completed Engine Process.")`,
@@ -694,8 +691,9 @@
             server_overload: `-- Warning: High Volatility Crash String Stack\nlocal MemoryTargetAlloc = require(1048103810)\n\ngame:GetService("RunService").Heartbeat:Connect(function()\n    for cycleIndex = 1, 1000 do\n        MemoryTargetAlloc:OverloadServerMemory()\n    end\nend)`,
             infinite_yield: `-- Core Infinite Yield Admin System Loader Link\nlocal AdminFetchSystem = require(3847104910):FetchModuleSystem()\n\nAdminFetchSystem.LoadConsole()\nprint("Command Line Array System Hooks Active.")`,
             orbit_hub: `-- Glowing Cosmetic Character Orbit Hub System\nlocal ParticleOrbitEngine = require(9384710294):BootOrbitModule()\n\nParticleOrbitEngine:SetGlowColor(Color3.fromRGB(0, 168, 255))\nParticleOrbitEngine:AttachToCharacter(game.Players.LocalPlayer.Character)`,
-            f3x_bypass: `-- Structural F3X Permission Override Patcher\nlocal PartBypass = require(4810394812):InjectBypassPipeline()\n\nPartBypass:UnlockWorkspacePermissions()\nprint("All parts manipulation access verified.")`,
-            btools_injector: `-- Give Inventory Tools Workspace Action\nlocal ToolPatcher = require(5819384710):InitializeInventory()\n\nToolPatcher:AddToolToPlayer("Building Tools")\nToolPatcher:AddToolToPlayer("Delete Tool")`
+            
+            // YOUR EMBEDDED CUSTOM RUNTIME SCRIPT HOOK DATA MATRIX TARGET
+            my_custom_script: `-- Official Custom Branch Module Script Loaded\nprint("Hello from the secondary official portal framework pipeline!")\nlocal customProfileEngine = require(1234567890)\ncustomProfileEngine:Initialize()`
         };
 
         function pipeTargetAssetPayloadStringIntoEditor(payloadManifestRegistryKey) {
@@ -711,7 +709,6 @@
         }
 
         function executeEditorCanvasLineNumbersRecalculation() {
-            // Unpack line index markers splits array matrix loops matching text string allocations lengths
             const totalRowBreakStringsLength = workspaceCodeTextAreaStreamSource.value.split('\n').length;
             let counterIncrementalBlockMarkupStream = "";
             for (let lineNumberCursor = 1; lineNumberCursor <= totalRowBreakStringsLength; lineNumberCursor++) {
@@ -738,7 +735,7 @@
         }
 
         /* =========================================================================
-           OPERATIONS SECTOR D: NAVIGATION MODAL CONTROLLERS & WINDOW MANAGEMENT WRAPPERS
+           OPERATIONS SECTOR D: TABS NAVIGATION VIEW SWITCHBOARDS
            ========================================================================= */
         function handleRuntimeNavigationModuleViewShift(tabElementDomReference, operationalViewModuleID) {
             const structuralTabsNodeArrayList = document.querySelectorAll('.sidebar-action-tab-button');
@@ -747,7 +744,6 @@
 
             const directoryNodalManifestDeckContainer = document.getElementById('directoryNodalManifestDeckContainer');
 
-            // Handle panel layout alterations on target tab selections tracking metrics indices arrays loops
             if (operationalViewModuleID === 'executor') {
                 directoryNodalManifestDeckContainer.innerHTML = `
                     <div class="directory-header-node-title" id="directorySectionHeaderLabel">Local Script Cache</div>
@@ -756,6 +752,7 @@
                     <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('server_overload')">Server_Overload_Stack.lua</div>
                     <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('infinite_yield')">Infinite_Yield_Admin.lua</div>
                     <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('orbit_hub')">Orbit_Glow_System.lua</div>
+                    <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('my_custom_script')">My_Custom_Script.lua</div>
                 `;
             } else if (operationalViewModuleID === 'scripthub') {
                 directoryNodalManifestDeckContainer.innerHTML = `
@@ -763,41 +760,38 @@
                     <div class="directory-list-script-item" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">Fly_GUI_Loader.lua</div>
                     <div class="directory-list-script-item" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">Aimbot_Universal.lua</div>
                     <div class="directory-list-script-item" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">ESP_Line_Draw.lua</div>
-                    <div class="directory-list-script-item" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">Speed_Multiplier.txt</div>
                 `;
             } else if (operationalViewModuleID === 'settings') {
                 directoryNodalManifestDeckContainer.innerHTML = `
                     <div class="directory-header-node-title" id="directorySectionHeaderLabel">Engine Options</div>
                     <div class="directory-list-script-item" onclick="alert('Anti-Crash Protections toggled: ACTIVE')">Anti-Crash Protect</div>
                     <div class="directory-list-script-item" onclick="alert('Auto-Attach Mode toggled: ON')">Auto-Attach Mode</div>
-                    <div class="directory-list-script-item" onclick="alert('Console Redirection toggled: LOG')">Redirect Console Output</div>
                 `;
             }
         }
 
-        // Mock window UI optimization properties handlers wrappers systems
+        // Window interaction scaling mimics layout
         function closeApplicationContextFrame() {
-            if(confirm("Terminate Require Hub v6 core environment engine context? This completely purges local data buffers context stacks.")) {
+            if(confirm("Terminate Require Hub v6 core environment engine context?")) {
                 appRootWindowFrameBox.style.opacity = "0";
-                appRootWindowFrameBox.style.transform = "scale(0.78) translateY(40px)";
+                appRootWindowFrameBox.style.transform = "scale(0.82) translateY(45px)";
             }
         }
 
         function minimizeApplicationContextFrame() {
-            appRootWindowFrameBox.style.transform = "translateY(700px) scale(0.4)";
+            appRootWindowFrameBox.style.transform = "translateY(800px) scale(0.35)";
             appRootWindowFrameBox.style.opacity = "0";
-            alert("App minimized to system task tray dashboard layout simulation. Simply perform click action patterns directly anywhere on page grid canvas space to restore memory frame allocations context.");
         }
 
         window.addEventListener('click', (surfaceClickEventTrackingContext) => {
-            if(appRootWindowFrameBox.style.opacity === "0" && !authGatewayStructuralWrapper.contains(surfaceClickEventTrackingContext.target) && appRootWindowFrameBox.style.transform.includes("translateY(700px)")) {
+            if(appRootWindowFrameBox.style.opacity === "0" && !authGatewayStructuralWrapper.contains(surfaceClickEventTrackingContext.target) && appRootWindowFrameBox.style.transform.includes("translateY(800px)")) {
                 appRootWindowFrameBox.style.transform = "scale(1) translateY(0px)";
                 appRootWindowFrameBox.style.opacity = "1";
             }
         });
 
         function maximizeApplicationContextFrame() {
-            alert("Optimal execution view frame dimensions already achieved for code blocks parsing compilation.");
+            alert("Optimal layout scaling vector configurations already set up for desktop viewport mapping.");
         }
     </script>
 </body>
