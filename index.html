@@ -1,608 +1,766 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Require Hub</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg-deep:#060810;--bg-card:#0d1117;--border:rgba(255,255,255,0.08);
-  --border-glow:rgba(0,168,255,0.35);--accent:#00a8ff;--accent2:#7b5fff;
-  --accent-grad:linear-gradient(135deg,#00a8ff,#7b5fff);
-  --text:#e8eaf0;--text-muted:#6b7280;--text-dim:#4b5563;
-  --success:#22c55e;--danger:#ef4444;
-  --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
-  --ease:cubic-bezier(0.23,1,0.32,1);
-}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Space Grotesk',sans-serif;background:var(--bg-deep);color:var(--text);min-height:100vh;overflow-x:hidden;}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Require Hub v6 — Official Production Engine</title>
+    <style>
+        /* --- RESET & CORE VARIABLES --- */
+        :root {
+            --bg-main: #050508;
+            --panel-bg: rgba(10, 10, 14, 0.75);
+            --border-glow: rgba(0, 168, 255, 0.15);
+            --accent-cyan: #00a8ff;
+            --accent-green: #00ff88;
+            --accent-red: #ff4757;
+            --text-main: #ffffff;
+            --text-muted: #718093;
+            --editor-bg: #030305;
+        }
 
-/* INTERACTIVE MOVING BACKGROUND LAYER */
-#bg-canvas {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(circle at 50% 50%, #0c0f1d 0%, #060810 100%);
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            user-select: none;
+        }
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
-@keyframes msgIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-@keyframes spin{to{transform:rotate(360deg);}}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-.sidebar{position:fixed;left:0;top:0;width:240px;height:100vh;background:#080a10;border-right:1px solid var(--border);padding:28px 16px;display:none;z-index:10;overflow-y:auto;}
-.logo{font-size:22px;font-weight:700;background:var(--accent-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:32px;padding:0 10px;display:block;}
-.navBtn{width:100%;background:transparent;border:1px solid transparent;color:var(--text-muted);padding:12px 14px;border-radius:var(--radius-sm);margin-top:6px;cursor:pointer;text-align:left;font-size:14px;font-family:'Space Grotesk',sans-serif;font-weight:500;transition:all 0.22s var(--ease);display:flex;align-items:center;gap:6px;}
-.navBtn:hover{color:var(--text);border-color:var(--border);background:rgba(255,255,255,0.04);transform:translateX(3px);}
-.navBtn.active{color:var(--accent);border-color:var(--border-glow);background:rgba(0,168,255,0.08);}
-.navBadge{background:var(--danger);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:20px;margin-left:auto;min-width:18px;text-align:center;}
+        /* --- THE ADVANCED PARTICLES BACKGROUND ENGINE --- */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
 
-.main{margin-left:0;padding:30px;position:relative;z-index:1;}
-.panel{display:none;margin-left:240px;padding:30px;position:relative;z-index:1;}
+        .ambient-shimmer {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at center, rgba(0, 168, 255, 0.05) 0%, rgba(4, 4, 6, 0.98) 85%);
+            z-index: 2;
+            pointer-events: none;
+        }
 
-.loginBox{width:460px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:36px 32px;margin:auto;margin-top:60px;box-shadow:0 32px 80px rgba(0,0,0,0.6);animation:fadeUp 0.5s var(--ease) both; position:relative; z-index:2;}
-.loginBox .logo{font-size:26px;margin-bottom:6px;}
-.loginSub{color:var(--text-muted);font-size:13px;margin-bottom:20px;}
+        /* --- MAIN EXECUTOR APPLICATION WINDOW CONTAINER --- */
+        .app-window {
+            position: relative;
+            z-index: 10;
+            background: var(--panel-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.85), 0 0 50px rgba(0, 168, 255, 0.03);
+            color: var(--text-main);
+            overflow: hidden;
+            width: 820px;
+            height: 510px;
+            display: flex;
+            flex-direction: column;
+            transform: scale(1);
+            opacity: 1;
+            transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-.avatarSection{margin-top:16px;}
-.avatarLabel{font-size:11px;color:var(--text-muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;display:block;}
-.avatarTabs{display:flex;gap:8px;margin-bottom:12px;}
-.avatarTab{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-muted);padding:7px 16px;border-radius:var(--radius-sm);cursor:pointer;font-size:12px;font-family:'Space Grotesk',sans-serif;font-weight:500;transition:all 0.2s var(--ease);}
-.avatarTab.active{color:var(--accent);border-color:var(--border-glow);background:rgba(0,168,255,0.08);}
-.pfpGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
-.pfpOption{width:100%;aspect-ratio:1;background:rgba(255,255,255,0.04);border:2px solid var(--border);border-radius:12px;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.18s var(--ease);padding:0;}
-.pfpOption:hover{background:rgba(0,168,255,0.08);border-color:rgba(0,168,255,0.3);transform:scale(1.1);}
-.pfpOption.selected{background:rgba(0,168,255,0.15);border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,168,255,0.2);transform:scale(1.1);}
-.imgUploadArea{border:2px dashed var(--border);border-radius:var(--radius-md);padding:24px;text-align:center;cursor:pointer;transition:all 0.2s var(--ease);position:relative;overflow:hidden;}
-.imgUploadArea:hover{border-color:rgba(0,168,255,0.4);background:rgba(0,168,255,0.04);}
-.imgUploadArea input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;margin:0;}
-.imgUploadArea .upIcon{font-size:32px;margin-bottom:8px;}
-.imgUploadArea p{font-size:13px;color:var(--text-muted);}
-.imgPreview{width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);margin:10px auto 0;display:block;}
+        /* --- TOP WINDOW OPERATION BAR --- */
+        .window-topbar {
+            background: rgba(14, 14, 20, 0.9);
+            padding: 14px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.topbar{background:var(--bg-card);border:1px solid var(--border);padding:16px 20px;border-radius:var(--radius-lg);display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;box-shadow:0 4px 24px rgba(0,0,0,0.3);}
-.welcome{font-size:20px;font-weight:700;}
-.topbarRight{display:flex;align-items:center;gap:10px;}
-.searchBox{width:240px;margin-top:0!important;}
-.profileBtn{width:42px;height:42px;border-radius:50%;background:var(--accent-grad);border:2px solid rgba(0,168,255,0.3);color:white;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;margin-top:0;box-shadow:0 0 20px rgba(0,168,255,0.3);transition:all 0.22s var(--ease);font-family:'Space Grotesk',sans-serif;overflow:hidden;padding:0;}
-.profileBtn:hover{transform:scale(1.1);box-shadow:0 0 32px rgba(0,168,255,0.5);}
-.profileBtn img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+        .topbar-identity {
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            font-weight: 700;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-transform: uppercase;
+        }
 
-/* GIF LINK MODAL */
-.gifLinkModal{width:420px;}
-.gifLinkPreview{margin-top:12px;border-radius:var(--radius-md);overflow:hidden;max-height:200px;display:none;text-align:center;}
-.gifLinkPreview img{max-width:100%;max-height:200px;object-fit:contain;border-radius:var(--radius-md);}
+        .topbar-identity img {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 1px solid var(--accent-cyan);
+            box-shadow: 0 0 8px rgba(0, 168, 255, 0.4);
+        }
 
-/* CHAT GIF display */
-.chatGif{max-width:200px;border-radius:10px;margin-top:4px;display:block;}
-.dmGif{max-width:200px;border-radius:10px;margin-top:4px;display:block;}
+        .topbar-actions {
+            display: flex;
+            gap: 8px;
+        }
 
-.tabContent{display:none;}
-.tabContent.active{display:block;animation:fadeUp 0.3s var(--ease) both;}
+        .action-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: opacity 0.15s ease;
+        }
+        .action-circle:hover { opacity: 0.7; }
+        .action-circle.close-window { background: var(--accent-red); }
+        .action-circle.min-window { background: #ffbd2e; }
+        .action-circle.max-window { background: #27c93f; }
 
-.cardGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;}
-.card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;transition:all 0.25s var(--ease);position:relative;overflow:hidden;}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--accent-grad);opacity:0;transition:opacity 0.25s var(--ease);}
-.card:hover{border-color:var(--border-glow);background:rgba(0,168,255,0.04);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,0.4);}
-.card:hover::before{opacity:1;}
-.cardTitle{font-size:18px;font-weight:700;margin-bottom:6px;}
-.requireText{color:var(--accent);word-break:break-all;margin-bottom:12px;font-family:'JetBrains Mono',monospace;font-size:13px;background:rgba(0,168,255,0.06);padding:8px 12px;border-radius:8px;border:1px solid rgba(0,168,255,0.12);}
-.badge{display:inline-flex;align-items:center;gap:5px;background:rgba(123,95,255,0.12);color:#a78bfa;font-size:11px;padding:3px 10px;border-radius:20px;margin-bottom:10px;border:1px solid rgba(123,95,255,0.2);font-weight:500;cursor:pointer;transition:background 0.15s;}
-.badge:hover{background:rgba(123,95,255,0.22);}
-.cardActionRow{display:flex;align-items:center;gap:6px;margin-top:10px;flex-wrap:wrap;}
-.likeBtn{background:rgba(255,255,255,0.04)!important;border:1px solid var(--border)!important;color:var(--text-muted)!important;padding:7px 14px!important;border-radius:20px!important;font-size:13px!important;margin:0!important;transition:all 0.18s var(--ease)!important;}
-.likeBtn:hover{background:rgba(239,68,68,0.12)!important;border-color:rgba(239,68,68,0.35)!important;color:#f87171!important;transform:scale(1.05)!important;box-shadow:none!important;}
-.likeBtn.liked{background:rgba(239,68,68,0.15)!important;border-color:rgba(239,68,68,0.5)!important;color:#f87171!important;}
-.commentBtn{background:rgba(255,255,255,0.04)!important;border:1px solid var(--border)!important;color:var(--text-muted)!important;padding:7px 14px!important;border-radius:20px!important;font-size:13px!important;margin:0!important;transition:all 0.18s var(--ease)!important;}
-.commentBtn:hover{background:rgba(0,168,255,0.1)!important;border-color:var(--border-glow)!important;color:var(--accent)!important;transform:scale(1.05)!important;box-shadow:none!important;}
-.likeCount,.commentCount{font-size:13px;color:var(--text-muted);}
+        /* --- APPLICATION AREA VIEWPORT 1: SECURE AUTHENTICATION GATEWAY --- */
+        .gateway-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            padding: 50px;
+            text-align: center;
+        }
 
-/* COMMENTS SECTION */
-.commentsSection{margin-top:12px;border-top:1px solid var(--border);padding-top:12px;display:none;}
-.commentsSection.open{display:block;}
-.commentItem{display:flex;align-items:flex-start;gap:8px;margin-bottom:10px;animation:msgIn 0.2s var(--ease) both;}
-.commentAv{width:26px;height:26px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:13px;background:rgba(0,168,255,0.1);border:1px solid rgba(0,168,255,0.2);flex-shrink:0;}
-.commentAv img{width:100%;height:100%;object-fit:cover;}
-.commentBody{flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 12px;}
-.commentUser{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:2px;}
-.commentText{font-size:13px;line-height:1.4;color:var(--text);}
-.commentTime{font-size:10px;color:var(--text-dim);margin-top:3px;}
-.commentInputRow{display:flex;gap:6px;margin-top:8px;}
-.commentInputRow input{margin-top:0;flex:1;padding:9px 12px;font-size:13px;}
-.commentInputRow button{margin-top:0;padding:9px 14px;font-size:12px;}
+        .gateway-badge {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-cyan);
+            margin-bottom: 22px;
+            box-shadow: 0 0 25px rgba(0, 168, 255, 0.25);
+            object-fit: cover;
+        }
 
-input,textarea{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);padding:13px 16px;border-radius:var(--radius-sm);margin-top:12px;outline:none;font-family:'Space Grotesk',sans-serif;font-size:14px;transition:border-color 0.2s,background 0.2s,box-shadow 0.2s;resize:none;}
-input:focus,textarea:focus{border-color:var(--border-glow);background:rgba(0,168,255,0.05);box-shadow:0 0 0 3px rgba(0,168,255,0.1);}
-input::placeholder,textarea::placeholder{color:var(--text-dim);}
+        .gateway-container h2 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
 
-button{background:var(--accent-grad);border:none;color:white;padding:13px 20px;border-radius:var(--radius-sm);margin-top:12px;cursor:pointer;font-weight:600;font-family:'Space Grotesk',sans-serif;font-size:14px;transition:all 0.22s var(--ease);position:relative;overflow:hidden;}
-button:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,168,255,0.35);}
-button:active{transform:translateY(0);}
-.rowBtns{display:flex;gap:10px;}
-.rowBtns button{flex:1;}
-.btnSecondary{background:rgba(255,255,255,0.06)!important;border:1px solid var(--border)!important;color:var(--text)!important;}
-.btnSecondary:hover{background:rgba(255,255,255,0.1)!important;box-shadow:none!important;}
-.btnDanger{background:linear-gradient(135deg,#ef4444,#b91c1c)!important;}
-.btnDanger:hover{box-shadow:0 8px 24px rgba(239,68,68,0.35)!important;}
-.btnSuccess{background:linear-gradient(135deg,#22c55e,#16a34a)!important;}
-.btnSuccess:hover{box-shadow:0 8px 24px rgba(34,197,94,0.35)!important;}
+        .gateway-subtext {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
 
-.gifBtn{background:rgba(255,255,255,0.06)!important;border:1px solid var(--border)!important;color:var(--text-muted)!important;padding:10px 14px!important;border-radius:var(--radius-sm)!important;margin-top:0!important;font-size:13px!important;font-weight:600!important;cursor:pointer!important;transition:all 0.18s var(--ease)!important;white-space:nowrap!important;}
-.gifBtn:hover{background:rgba(0,168,255,0.1)!important;border-color:var(--border-glow)!important;color:var(--accent)!important;transform:translateY(-1px)!important;box-shadow:none!important;}
+        .gateway-form-engine {
+            width: 100%;
+            max-width: 340px;
+        }
 
-.inputGroup{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:22px;}
-.inputGroup h2{font-size:17px;font-weight:700;margin-bottom:4px;}
-.inputGroupSub{color:var(--text-muted);font-size:13px;margin-top:4px;}
+        .form-input-field {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            margin-bottom: 16px;
+            transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+        }
 
-.inviteBox{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;}
-.inviteKeyBox{background:rgba(0,168,255,0.06);border:1px solid rgba(0,168,255,0.18);padding:16px 18px;border-radius:var(--radius-md);margin-top:14px;font-weight:700;color:var(--accent);word-break:break-all;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:1px;}
+        .form-input-field:focus {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 168, 255, 0.01);
+            box-shadow: 0 0 12px rgba(0, 168, 255, 0.12);
+        }
 
-.chatBox{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--radius-lg);display:flex;flex-direction:column;height:520px;overflow:hidden;}
-.chatMessages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:10px;}
-.chatMsg{max-width:72%;padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.55;animation:msgIn 0.2s var(--ease) both;}
-.chatMsg.mine{background:var(--accent-grad);align-self:flex-end;border-bottom-right-radius:4px;box-shadow:0 4px 16px rgba(0,168,255,0.3);}
-.chatMsg.theirs{background:rgba(255,255,255,0.05);border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px;}
-.chatMsgHead{display:flex;align-items:center;gap:7px;margin-bottom:4px;}
-.chatMsgAv{width:22px;height:22px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:13px;background:rgba(255,255,255,0.08);flex-shrink:0;}
-.chatMsgAv img{width:100%;height:100%;object-fit:cover;}
-.msgUser{font-size:11px;opacity:.7;font-weight:600;}
-.msgTime{font-size:10px;opacity:.4;margin-top:4px;text-align:right;}
-.chatInputRow{display:flex;gap:8px;padding:14px 16px;border-top:1px solid var(--border);background:rgba(0,0,0,0.2);align-items:center;}
-.chatInputRow input{margin-top:0;flex:1;}
-.chatInputRow button{margin-top:0;padding:12px 22px;white-space:nowrap;}
+        .form-trigger-button {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent-cyan);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
 
-.dmLayout{display:flex;gap:0;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--radius-lg);height:560px;overflow:hidden;}
-.dmSidebar{width:220px;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
-.dmSidebarHead{padding:14px 16px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;}
-.dmConvoList{flex:1;overflow-y:auto;}
-.dmConvoItem{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;transition:background 0.15s;border-bottom:1px solid rgba(255,255,255,0.04);position:relative;}
-.dmConvoItem:hover{background:rgba(255,255,255,0.04);}
-.dmConvoItem.active{background:rgba(0,168,255,0.08);}
-.dmConvoAv{width:36px;height:36px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:18px;background:rgba(0,168,255,0.1);border:1px solid rgba(0,168,255,0.2);flex-shrink:0;}
-.dmConvoAv img{width:100%;height:100%;object-fit:cover;}
-.dmConvoName{font-size:13px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.dmMain{flex:1;display:flex;flex-direction:column;min-width:0;}
-.dmHeader{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.15);}
-.dmHeaderAv{width:34px;height:34px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:18px;background:rgba(0,168,255,0.1);flex-shrink:0;}
-.dmHeaderAv img{width:100%;height:100%;object-fit:cover;}
-.dmHeaderName{font-size:15px;font-weight:700;}
-.dmMessages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px;}
-.dmMsg{max-width:75%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.5;animation:msgIn 0.2s var(--ease) both;}
-.dmMsg.mine{background:var(--accent-grad);align-self:flex-end;border-bottom-right-radius:3px;box-shadow:0 3px 12px rgba(0,168,255,0.25);}
-.dmMsg.theirs{background:rgba(255,255,255,0.05);border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:3px;}
-.dmMsgTime{font-size:10px;opacity:.4;margin-top:3px;text-align:right;}
-.dmInputRow{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--border);background:rgba(0,0,0,0.2);align-items:center;}
-.dmInputRow input{margin-top:0;flex:1;}
-.dmInputRow button{margin-top:0;padding:10px 18px;white-space:nowrap;font-size:13px;}
-.dmEmpty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:14px;flex-direction:column;gap:10px;}
-.dmEmpty .dmEmptyIcon{font-size:40px;opacity:.4;}
-.dmNoFriends{padding:20px;color:var(--text-dim);font-size:13px;text-align:center;}
+        .form-trigger-button:hover {
+            background: #0097e6;
+            box-shadow: 0 0 20px rgba(0, 168, 255, 0.4);
+        }
 
-.overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;}
-.overlay.open{display:flex;}
-.modal{background:var(--bg-card);border:1px solid rgba(0,168,255,0.2);border-radius:var(--radius-lg);padding:28px;width:400px;max-width:96vw;max-height:90vh;overflow-y:auto;box-shadow:0 40px 100px rgba(0,0,0,0.95);position:relative;animation:fadeUp 0.3s var(--ease) both;}
-.modalHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
-.modalHead span{font-size:16px;font-weight:700;}
-.closeBtn{background:rgba(255,255,255,0.06)!important;border:1px solid var(--border)!important;color:var(--text-muted)!important;width:32px!important;height:32px!important;border-radius:8px!important;font-size:14px!important;padding:0!important;margin:0!important;cursor:pointer!important;display:flex!important;align-items:center!important;justify-content:center!important;transition:all 0.15s!important;flex-shrink:0;}
-.closeBtn:hover{background:rgba(239,68,68,0.15)!important;color:#f87171!important;transform:none!important;box-shadow:none!important;}
-.divider{border:none;border-top:1px solid var(--border);margin:18px 0;}
-.settLabel{font-size:11px;color:var(--text-muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;display:block;}
-.showToggle{background:none!important;border:none!important;color:var(--accent)!important;font-size:12px!important;cursor:pointer!important;margin-top:6px!important;padding:0!important;font-weight:500!important;font-family:'Space Grotesk',sans-serif!important;transition:opacity 0.15s!important;}
-.showToggle:hover{opacity:.7!important;transform:none!important;box-shadow:none!important;}
-.settSuccess{color:var(--success);font-size:13px;margin-top:8px;display:none;font-weight:500;}
-.settPfpPreviewWrap{display:flex;justify-content:center;margin-bottom:14px;}
-.settPfpPreview{width:72px;height:72px;border-radius:50%;background:rgba(0,168,255,0.1);border:2px solid rgba(0,168,255,0.3);display:flex;align-items:center;justify-content:center;font-size:36px;overflow:hidden;}
-.settPfpGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-bottom:8px;}
-.settPfpBtn{width:100%;aspect-ratio:1;background:rgba(255,255,255,0.04);border:2px solid var(--border);border-radius:10px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.16s var(--ease);padding:0;margin:0;}
-.settPfpBtn:hover{background:rgba(0,168,255,0.1);border-color:rgba(0,168,255,0.35);transform:scale(1.12);box-shadow:none;}
-.settPfpBtn.selected{background:rgba(0,168,255,0.18);border-color:var(--accent);}
+        .form-footer-toggle {
+            margin-top: 24px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
 
-/* FOLLOW BUTTON */
-.followBtn{background:rgba(0,168,255,0.12)!important;border:1px solid rgba(0,168,255,0.3)!important;color:var(--accent)!important;padding:8px 16px!important;border-radius:20px!important;font-size:12px!important;font-weight:700!important;margin:0!important;cursor:pointer!important;transition:all 0.18s var(--ease)!important;}
-.followBtn:hover{background:rgba(0,168,255,0.22)!important;transform:none!important;box-shadow:none!important;}
-.followBtn.following{background:rgba(123,95,255,0.15)!important;border-color:rgba(123,95,255,0.4)!important;color:#a78bfa!important;}
+        .form-footer-toggle span {
+            color: var(--accent-cyan);
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .form-footer-toggle span:hover { text-decoration: underline; }
 
-.profilePage{max-width:720px;}
-.profileHeader{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;margin-bottom:22px;position:relative;overflow:hidden;}
-.profileHeader::before{content:'';position:absolute;top:0;left:0;right:0;height:80px;background:linear-gradient(135deg,rgba(0,168,255,0.15),rgba(123,95,255,0.15));z-index:0;}
-.profileAvatar{width:80px;height:80px;border-radius:50%;border:3px solid var(--accent);background:rgba(0,168,255,0.1);display:flex;align-items:center;justify-content:center;font-size:40px;position:relative;z-index:1;overflow:hidden;flex-shrink:0;}
-.profileAvatar img{width:100%;height:100%;object-fit:cover;}
-.profileInfo{position:relative;z-index:1;}
-.profileName{font-size:24px;font-weight:700;margin-bottom:4px;}
-.profileBio{color:var(--text-muted);font-size:14px;margin-bottom:12px;line-height:1.5;}
-.profileStats{display:flex;gap:24px;margin-top:8px;flex-wrap:wrap;}
-.profileStat .num{font-size:20px;font-weight:700;color:var(--accent);}
-.profileStat .lbl{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;}
-.profileActions{display:flex;gap:10px;margin-top:16px;position:relative;z-index:1;flex-wrap:wrap;}
-.profileActions button{margin:0;padding:10px 20px;}
+        /* --- APPLICATION AREA VIEWPORT 2: REQUIRE HUB RUNTIME DESKTOP --- */
+        .runtime-container {
+            display: none; /* Injected by Javascript Gateway */
+            flex-grow: 1;
+            grid-template-columns: 70px 200px 1fr;
+            height: calc(100% - 51px);
+        }
 
-.friendsGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
-.friendCard{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;text-align:center;transition:all 0.2s var(--ease);}
-.friendCard:hover{border-color:var(--border-glow);transform:translateY(-2px);}
-.friendAvatar{width:52px;height:52px;border-radius:50%;margin:0 auto 10px;border:2px solid rgba(0,168,255,0.3);background:rgba(0,168,255,0.08);display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden;}
-.friendAvatar img{width:100%;height:100%;object-fit:cover;}
-.friendName{font-size:14px;font-weight:600;margin-bottom:4px;}
-.friendMeta{font-size:12px;color:var(--text-muted);}
-.requestCard{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:12px;transition:border-color 0.2s;}
-.requestCard:hover{border-color:var(--border-glow);}
-.requestAvatar{width:46px;height:46px;border-radius:50%;background:rgba(0,168,255,0.08);border:2px solid rgba(0,168,255,0.2);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;overflow:hidden;}
-.requestAvatar img{width:100%;height:100%;object-fit:cover;}
-.requestInfo{flex:1;}
-.requestName{font-size:14px;font-weight:600;}
-.requestSub{font-size:12px;color:var(--text-muted);margin-top:2px;}
-.requestBtns{display:flex;gap:8px;}
-.requestBtns button{margin:0;padding:8px 14px;font-size:12px;}
-.userRow{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--radius-md);cursor:pointer;transition:background 0.15s;border:1px solid transparent;margin-bottom:6px;}
-.userRow:hover{background:rgba(255,255,255,0.04);border-color:var(--border);}
-.userRowAv{width:40px;height:40px;border-radius:50%;background:rgba(0,168,255,0.08);border:2px solid rgba(0,168,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;overflow:hidden;}
-.userRowAv img{width:100%;height:100%;object-fit:cover;}
-.userRowName{font-size:14px;font-weight:600;}
-.userRowSub{font-size:12px;color:var(--text-muted);}
-.userRowActions{display:flex;gap:6px;margin-left:auto;align-items:center;flex-shrink:0;}
-.userRowActions button{margin:0;padding:7px 13px;font-size:12px;}
+        /* COLUMN A: RIBBON UTILITY BUTTONS SIDEBAR */
+        .utility-ribbon {
+            background: rgba(12, 12, 16, 0.8);
+            border-right: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 25px 0;
+            gap: 24px;
+        }
 
-.subTabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
-.subTab{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-muted);padding:8px 18px;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-family:'Space Grotesk',sans-serif;font-weight:500;transition:all 0.2s var(--ease);display:flex;align-items:center;gap:5px;}
-.subTab.active{color:var(--accent);border-color:var(--border-glow);background:rgba(0,168,255,0.08);}
-.subTabContent{display:none;}
-.subTabContent.active{display:block;animation:fadeUp 0.25s var(--ease) both;}
-.sectionHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
-.sectionHead h2{font-size:17px;font-weight:700;}
-.status{margin-top:12px;color:#f87171;text-align:center;font-size:13px;font-weight:500;}
-.statusSuccess{margin-top:12px;color:var(--success);text-align:center;font-size:13px;font-weight:500;}
-.emptyMsg{color:var(--text-dim);padding:10px;font-size:14px;}
+        .ribbon-action-tab {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+        }
 
-::-webkit-scrollbar{width:5px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:10px;}
-::-webkit-scrollbar-thumb:hover{background:rgba(0,168,255,0.35);}
-</style>
+        .ribbon-action-tab.active, .ribbon-action-tab:hover {
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            background: rgba(0, 168, 255, 0.05);
+            box-shadow: 0 0 12px rgba(0, 168, 255, 0.15);
+        }
+
+        .ribbon-action-tab.system-kill-trigger {
+            margin-top: auto;
+            color: var(--accent-red);
+            border-color: rgba(255, 71, 87, 0.2);
+        }
+        .ribbon-action-tab.system-kill-trigger:hover {
+            background: rgba(255, 71, 87, 0.1);
+            border-color: var(--accent-red);
+            box-shadow: 0 0 12px rgba(255, 71, 87, 0.2);
+        }
+
+        /* COLUMN B: ASSETS DIRECTORY MANIFEST BLOCK */
+        .assets-manifest-deck {
+            background: rgba(6, 6, 9, 0.65);
+            border-right: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 20px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+        }
+
+        .assets-manifest-deck::-webkit-scrollbar {
+            width: 4px;
+        }
+        .assets-manifest-deck::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .manifest-title-header {
+            font-size: 0.7rem;
+            color: #57606f;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            padding-left: 8px;
+            margin-bottom: 8px;
+        }
+
+        .manifest-script-node {
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid transparent;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            color: #f5f6fa;
+            cursor: pointer;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.15s ease;
+        }
+
+        .manifest-script-node:hover {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.08);
+            padding-left: 18px;
+            color: #ffffff;
+        }
+
+        /* COLUMN C: DEVELOPMENT WORKSPACE PANEL STYLING (THE CODE EDITOR AREA) */
+        .workspace-interactive-deck {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #050508;
+        }
+
+        /* Full line-number simulation workspace */
+        .editor-workspace-canvas {
+            flex-grow: 1;
+            background: var(--editor-bg);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 6px;
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .editor-line-counters {
+            text-align: right;
+            font-family: 'Consolas', 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #333344;
+            line-height: 1.5;
+            user-select: none;
+        }
+
+        .editor-input-processing-stream {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--accent-cyan);
+            font-family: 'Consolas', 'Fira Code', monospace;
+            font-size: 0.85rem;
+            resize: none;
+            line-height: 1.5;
+            white-space: pre;
+            overflow-x: auto;
+            overflow-y: auto;
+        }
+
+        /* Operations Control Footprint Row */
+        .workspace-operations-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .operations-trigger-cluster {
+            display: flex;
+            gap: 12px;
+        }
+
+        .execution-button-node {
+            padding: 10px 22px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.02);
+            color: #ffffff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .execution-button-node:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .execution-button-node.action-execute {
+            background: var(--accent-cyan);
+            color: #ffffff;
+            border: none;
+        }
+
+        .execution-button-node.action-execute:hover {
+            background: #0097e6;
+            box-shadow: 0 0 15px rgba(0, 168, 255, 0.35);
+        }
+
+        .telemetry-pipeline-status {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: monospace;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .telemetry-pipeline-status span {
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        /* HELPER VISIBILITY STYLES */
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
+    <!-- DIGITAL INTERCONNECTED NODE DOT MATRIX CANVAS -->
+    <canvas id="bgCanvas"></canvas>
+    <div class="ambient-shimmer"></div>
 
-<div class="sidebar" id="sidebar">
-  <div class="logo">Require Hub</div>
-  <button class="navBtn active" id="navScripts">📦 Scripts</button>
-  <button class="navBtn" id="navChat">💬 Global Chat</button>
-  <button class="navBtn" id="navDMs">✉️ Messages <span class="navBadge" id="dmBadge" style="display:none">0</span></button>
-  <button class="navBtn" id="navFriends">👥 Friends <span class="navBadge" id="friendBadge" style="display:none">0</span></button>
-  <button class="navBtn" id="navMyProfile">👤 My Profile</button> <button class="navBtn" id="navInvite">🔑 Invite</button>
-  <button class="navBtn" id="navLogout" style="margin-top:20px">🚪 Logout</button>
-</div>
-
-<div class="main" id="main">
-  <div class="loginBox" id="loginBox">
-    <div class="logo">Require Hub</div>
-    <p class="loginSub" id="loginSub">Create your account to get started</p>
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
-    <input type="text" id="inviteField" placeholder="Invite Key">
-    <div id="signupExtras">
-      <input type="text" id="bioField" placeholder="Short bio (optional)" style="margin-top:12px;">
-      <div class="avatarSection">
-        <span class="avatarLabel">Choose your avatar</span>
-        <div class="avatarTabs">
-          <button type="button" class="avatarTab active" id="tabEmoji">😀 Emoji</button>
-          <button type="button" class="avatarTab" id="tabImage">🖼️ Image</button>
+    <!-- MAIN CORE FRAMEWORK SHELL -->
+    <div class="app-window" id="appMainWindowUnit">
+        
+        <!-- SYSTEM TOP NAVBAR CONTROL FRAME -->
+        <div class="window-topbar">
+            <div class="topbar-identity">
+                <img src="https://via.placeholder.com/50/00a8ff/ffffff?text=RH" alt="Require Hub Icon" id="appGlobalIcon">
+                <span id="windowDisplayTitle">Require Hub v6 // Connection Portal</span>
+            </div>
+            <div class="topbar-actions">
+                <div class="action-circle close-window" onclick="closeApplicationWidget()" title="Terminate Process"></div>
+                <div class="action-circle min-window" onclick="minimizeApplicationWidget()" title="Suspend Window"></div>
+                <div class="action-circle max-window" onclick="maximizeApplicationWidget()" title="Expand Allocation"></div>
+            </div>
         </div>
-        <div id="emojiPickerWrap"><div class="pfpGrid" id="pfpGrid"></div></div>
-        <div id="imageUploadWrap" style="display:none;">
-          <div class="imgUploadArea" id="uploadArea">
-            <input type="file" id="pfpFileInput" accept="image/*">
-            <div class="upIcon">📁</div>
-            <p>Click or drag an image here</p>
-            <p style="font-size:11px;margin-top:4px;color:var(--text-dim);">JPG, PNG, GIF — max 2MB</p>
-          </div>
-          <img id="pfpPreviewImg" class="imgPreview" style="display:none;">
+
+        <!-- STAGE MODULE 1: AUTHENTICATION ENTRANCE CONTROL GATEWAY -->
+        <div class="gateway-container" id="gatewayControlWrapper">
+            <img src="https://via.placeholder.com/150/00a8ff/ffffff?text=V6" class="gateway-badge" alt="Loader Profile Asset">
+            <h2 id="gatewayDisplayHeader">Security Clearance Required</h2>
+            <p class="gateway-subtext" id="gatewayDisplaySubtext">Establish link sequence to initialization node pipeline.</p>
+            
+            <form class="gateway-form-engine" onsubmit="processAuthenticationGateway(event)">
+                <input type="text" id="identityUserField" class="form-input-field hidden" placeholder="Construct Core Access HandleID">
+                <input type="email" id="identityEmailField" class="form-input-field" placeholder="System Registry Identifier Email" required>
+                <input type="password" id="identityPasswordField" class="form-input-field" placeholder="Security Access Encryption Token" required>
+                
+                <button type="submit" class="form-trigger-button" id="gatewaySubmitTrigger">Authorize Gateway Interface</button>
+            </form>
+
+            <div class="form-footer-toggle" id="gatewayToggleWrapper">
+                New instance pipeline structure? <span onclick="switchGatewayInteractionMode()">Provision Account Profile</span>
+            </div>
         </div>
-      </div>
-    </div>
-    <button id="signInBtn" style="width:100%;margin-top:16px;">Sign Up</button>
-    <p style="text-align:center;margin-top:14px;font-size:13px;color:#555;">
-      Already have an account? <a id="switchLink" href="#" style="color:#00a8ff;text-decoration:none;">Log In</a>
-    </p>
-    <div class="status" id="status"></div>
-  </div>
-</div>
 
-<div class="panel" id="panel">
-  <div class="topbar">
-    <div class="welcome" id="welcomeMsg">Welcome back</div>
-    <div class="topbarRight">
-      <input class="searchBox" type="text" id="searchBar" placeholder="Search scripts…">
-      <button class="profileBtn" id="profileBtn"></button>
-    </div>
-  </div>
+        <!-- STAGE MODULE 2: PRODUCTION REAL EXECUTOR SYSTEM RUNTIME ENVIRONMENT -->
+        <div class="runtime-container" id="runtimeControlWrapper">
+            
+            <!-- PANEL SECTOR A: VERTICAL ICON RIBBON ACTION NAVIGATION -->
+            <div class="utility-ribbon">
+                <div class="ribbon-action-tab active" onclick="switchRuntimeModuleTab(this, 'executor')" title="Workspace Engine Suite">EXE</div>
+                <div class="ribbon-action-tab" onclick="switchRuntimeModuleTab(this, 'scripthub')" title="Central Cloud Index Scripts">HUB</div>
+                <div class="ribbon-action-tab" onclick="switchRuntimeModuleTab(this, 'settings')" title="Core Interface Modifications">SET</div>
+                <div class="ribbon-action-tab system-kill-trigger" onclick="terminateActiveRuntime()" title="Disconnect Engine System Pipeline">SYS</div>
+            </div>
 
-  <div class="tabContent active" id="tab-scripts">
-    <div class="inputGroup">
-      <h2>Add Require Script</h2>
-      <p class="inputGroupSub">Share a script with the community</p>
-      <input type="text" id="scriptTitle" placeholder="Script Title (e.g., Infinite Yield FE)">
-      <input type="text" id="scriptText" placeholder="require(123456789) or local source...">
-      <input type="text" id="scriptTag" placeholder="Tag (optional, e.g., Admin, Combat)">
-      <button id="addScriptBtn">Publish Script</button>
-    </div>
-    <div class="cardGrid" id="scriptsGrid"></div>
-  </div>
+            <!-- PANEL SECTOR B: SCRIPTS DIRECTORY NODAL MANIFEST TREE -->
+            <div class="assets-manifest-deck" id="assetsDirectoryDeckBox">
+                <div class="manifest-title-header" id="directoryTreeHeader">Local Script Cache</div>
+                <!-- Dynamic Nodes Hook Array -->
+                <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('fe_kill')">FE_Kill_Core_v2.lua</div>
+                <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('dex_explorer')">Dex_Explorer_v4.txt</div>
+                <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('server_overload')">Server_Overload_Stack.lua</div>
+                <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('infinite_yield')">Infinite_Yield_Admin.lua</div>
+                <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('orbit_hub')">Orbit_Glow_System.lua</div>
+                <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('f3x_bypass')">F3X_Server_Bypass.lua</div>
+                <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('btools_injector')">BTools_Inventory_Patcher.txt</div>
+            </div>
 
-  <div class="tabContent" id="tab-chat">
-    <div class="chatBox">
-      <div class="chatMessages" id="chatMessages"></div>
-      <div class="chatInputRow">
-        <input type="text" id="chatInput" placeholder="Type a message…">
-        <button class="gifBtn" id="chatGifBtn">👾 GIF</button>
-        <button id="sendChatBtn">Send</button>
-      </div>
-    </div>
-  </div>
+            <!-- PANEL SECTOR C: LIVE CODE WORKSPACE DEVELOPMENT INTERACTION DECK -->
+            <div class="workspace-interactive-deck" id="workspaceMainDevelopmentDeck">
+                <div class="editor-workspace-canvas">
+                    <!-- Line-Numbering Simulation Core -->
+                    <div class="editor-line-counters" id="editorCanvasLineCounters">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17</div>
+                    
+                    <!-- Editable Code Matrix Block -->
+                    <textarea id="codeTextStreamArea" spellcheck="false" oninput="recalculateEditorLines()">-- Require Hub v6 Active Module Target Pipeline Loader&#10;local RequireEngine = require(8347104819)&#10;RequireEngine.load("MainServerEngine")</textarea>
+                </div>
 
-  <div class="tabContent" id="tab-dms">
-    <div class="dmLayout">
-      <div class="dmSidebar">
-        <div class="dmSidebarHead">Direct Messages</div>
-        <div class="dmConvoList" id="dmConvoList"></div>
-      </div>
-      <div class="dmMain" id="dmMainArea">
-        <div class="dmEmpty">
-          <div class="dmEmptyIcon">✉️</div>
-          <p>Select a friend to start chatting</p>
+                <!-- Lower Function Operations Control Execution Row -->
+                <div class="workspace-operations-bar">
+                    <div class="operations-trigger-cluster">
+                        <button class="execution-button-node action-execute" onclick="executeCompiledPayload()">Execute Script</button>
+                        <button class="execution-button-node" onclick="flushTextStreamArea()">Clear Canvas</button>
+                    </div>
+                    <div class="telemetry-pipeline-status">Engine State: <span id="telemetryStatusString">Ready to Inject</span></div>
+                </div>
+            </div>
+
         </div>
-      </div>
+
     </div>
-  </div>
 
-  <div class="tabContent" id="tab-friends">
-    <div class="subTabs">
-      <button class="subTab active" id="subTabAdd">🔍 Find Users</button>
-      <button class="subTab" id="subTabMyFriends">👥 My Friends</button>
-      <button class="subTab" id="subTabRequests">📩 Requests</button>
-    </div>
-    <div class="subTabContent active" id="subcontent-add">
-      <div class="sectionHead"><h2>Discover People</h2></div>
-      <div id="discoverUsersList"></div>
-    </div>
-    <div class="subTabContent" id="subcontent-myfriends">
-      <div class="sectionHead"><h2>Your Friends</h2></div>
-      <div class="friendsGrid" id="friendsGrid"></div>
-    </div>
-    <div class="subTabContent" id="subcontent-requests">
-      <div class="sectionHead"><h2>Friend Requests</h2></div>
-      <div id="friendRequestsList"></div>
-    </div>
-  </div>
+    <!-- --- PROGRAMMATIC OPERATIONS ARCHITECTURE ENGINE (JAVASCRIPT) --- -->
+    <script>
+        /* =========================================================================
+           SECTION 1: MATHEMATICAL SPACE NETWORK PARTICLE INTERPOLATION BG SYSTEM
+           ========================================================================= */
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
 
-  <div class="tabContent" id="tab-myprofile">
-    <div class="profilePage" id="myProfilePage"></div>
-  </div>
+        let viewportWidth = canvas.width = window.innerWidth;
+        let viewportHeight = canvas.height = window.innerHeight;
 
-  <div class="tabContent" id="tab-invite">
-    <div class="inputGroup">
-      <h2>Generate Invite Key</h2>
-      <p class="inputGroupSub">Create a registration token to bring your friends into Require Hub</p>
-      <button id="genInviteBtn" style="margin-top:16px;">Create Token</button>
-      <div id="inviteResult" style="display:none;">
-        <div class="inviteKeyBox" id="inviteKeyBox">TOKEN_HERE</div>
-        <p class="inputGroupSub" style="margin-top:10px;color:var(--success);">✔ Token generated successfully. This key can only be used once!</p>
-      </div>
-    </div>
-  </div>
-</div>
+        window.addEventListener('resize', () => {
+            viewportWidth = canvas.width = window.innerWidth;
+            viewportHeight = canvas.height = window.innerHeight;
+        });
 
-<div class="overlay" id="settOverlay">
-  <div class="modal">
-    <div class="modalHead">
-      <span>Account Settings</span>
-      <button class="closeBtn" id="settCloseBtn">✕</button>
-    </div>
-    <div class="settPfpPreviewWrap">
-      <div class="settPfpPreview" id="settPfpPreview">😀</div>
-    </div>
-    <span class="settLabel">Change Avatar Type</span>
-    <div class="avatarTabs" style="margin-bottom:14px;">
-      <button type="button" class="avatarTab active" id="settTabEmoji">😀 Emoji</button>
-      <button type="button" class="avatarTab" id="settTabImage">🖼️ Image</button>
-    </div>
-    <div id="settEmojiPickerWrap">
-      <div class="settPfpGrid" id="settPfpGrid"></div>
-    </div>
-    <div id="settImageUploadWrap" style="display:none;margin-bottom:14px;">
-      <div class="imgUploadArea" id="settUploadArea">
-        <input type="file" id="settFileInput" accept="image/*">
-        <div class="upIcon">📁</div>
-        <p>Upload new profile image</p>
-      </div>
-    </div>
-    <span class="settLabel">Username</span>
-    <input type="text" id="settUsername" placeholder="New username">
-    <span class="settLabel" style="margin-top:12px;display:block;">Password</span>
-    <input type="password" id="settPassword" placeholder="New password">
-    <button type="button" class="showToggle" id="togglePassBtn">👁 Show</button>
-    <div class="divider"></div>
-    <span class="settLabel">Profile Bio</span>
-    <textarea id="settBio" placeholder="Tell us about yourself..." style="height:80px;"></textarea>
-    <button id="saveSettingsBtn" style="width:100%;margin-top:20px;">Save Configuration</button>
-    <div class="settSuccess" id="settSuccess">✔ Settings updated successfully!</div>
-  </div>
-</div>
+        const trackingMatrixNodes = [];
+        const spatialNodeDensity = 110;
 
-<div class="overlay" id="gifModal">
-  <div class="modal gifLinkModal">
-    <div class="modalHead">
-      <span>Insert GIF Link</span>
-      <button class="closeBtn" id="gifCloseBtn">✕</button>
-    </div>
-    <p class="inputGroupSub">Paste a direct GIF URL from Tenor, Giphy, or Discord CDN:</p>
-    <input type="text" id="gifUrlInput" placeholder="https://media.tenor.com/.../animate.gif">
-    <div class="gifLinkPreview" id="gifLinkPreview">
-      <img id="gifPreviewImgElement" src="" alt="Preview">
-    </div>
-    <button id="confirmGifBtn" style="width:100%;margin-top:16px;">Insert GIF</button>
-  </div>
-</div>
+        // Populate geometric spatial vectors
+        for (let i = 0; i < spatialNodeDensity; i++) {
+            trackingMatrixNodes.push({
+                positionX: Math.random() * viewportWidth,
+                positionY: Math.random() * viewportHeight,
+                velocityX: (Math.random() - 0.5) * 1.5,
+                velocityY: (Math.random() - 0.5) * 1.5,
+                nodeRadius: Math.random() * 2 + 1
+            });
+        }
 
-<div class="overlay" id="userProfileOverlay">
-  <div class="modal" style="width:500px;">
-    <div class="modalHead">
-      <span>User Overview</span>
-      <button class="closeBtn" id="userProfileCloseBtn">✕</button>
-    </div>
-    <div id="userProfileModalContent"></div>
-  </div>
-</div>
+        function executionRenderLoopEngine() {
+            ctx.clearRect(0, 0, viewportWidth, viewportHeight);
+            ctx.fillStyle = "rgba(0, 168, 255, 0.45)";
 
-<script>
-// ==========================================
-// HIGH-PERFORMANCE INTERACTIVE CANVAS BACKGROUND
-// ==========================================
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
+            // Map operations through nodal configurations
+            for (let idx = 0; idx < trackingMatrixNodes.length; idx++) {
+                let targetNode = trackingMatrixNodes[idx];
+                targetNode.positionX += targetNode.velocityX;
+                targetNode.positionY += targetNode.velocityY;
 
-let particles = [];
-const properties = {
-  count: 75,
-  particleMaxVelocity: 0.4,
-  lineLength: 140,
-  particleRadius: 2.5
-};
+                // Handle boundaries collisions smoothly
+                if (targetNode.positionX < 0 || targetNode.positionX > viewportWidth) targetNode.velocityX *= -1;
+                if (targetNode.positionY < 0 || targetNode.positionY > viewportHeight) targetNode.velocityY *= -1;
 
-const mouse = { x: null, y: null, radius: 180 };
+                ctx.beginPath();
+                ctx.arc(targetNode.positionX, targetNode.positionY, targetNode.nodeRadius, 0, Math.PI * 2);
+                ctx.fill();
 
-window.addEventListener('mousemove', (e) => {
-  mouse.x = e.clientX;
-  mouse.y = e.clientY;
-});
-window.addEventListener('mouseout', () => {
-  mouse.x = null;
-  mouse.y = null;
-});
+                // Compute linear proximity distances between network intersections
+                for (let innerIdx = idx + 1; innerIdx < trackingMatrixNodes.length; innerIdx++) {
+                    let relationalNode = trackingMatrixNodes[innerIdx];
+                    let mathematicalDistance = Math.hypot(targetNode.positionX - relationalNode.positionX, targetNode.positionY - relationalNode.positionY);
 
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
+                    if (mathematicalDistance < 125) {
+                        ctx.strokeStyle = `rgba(0, 168, 255, ${1 - (mathematicalDistance / 125) * 0.98})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(targetNode.positionX, targetNode.positionY);
+                        ctx.lineTo(relationalNode.positionX, relationalNode.positionY);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(executionRenderLoopEngine);
+        }
+        executionRenderLoopEngine(); // Boot background graphics processing structure
 
-class Particle {
-  constructor() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.vx = (Math.random() * 2 - 1) * properties.particleMaxVelocity;
-    this.vy = (Math.random() * 2 - 1) * properties.particleMaxVelocity;
-    this.radius = Math.random() * properties.particleRadius + 1;
-    this.baseColor = Math.random() > 0.5 ? 'rgba(0, 168, 255,' : 'rgba(123, 95, 255,';
-  }
-  update() {
-    // Basic continuous float
-    this.x += this.vx;
-    this.y += this.vy;
+        /* =========================================================================
+           SECTION 2: GATEWAY PORTAL ROUTING SWITCHBOARD MECHANICS
+           ========================================================================= */
+        let applicationRegistrationStateMode = false;
 
-    // Bounce off limits
-    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        const gatewayControlWrapper = document.getElementById('gatewayControlWrapper');
+        const runtimeControlWrapper = document.getElementById('runtimeControlWrapper');
+        const appMainWindowUnit = document.getElementById('appMainWindowUnit');
+        const identityUserField = document.getElementById('identityUserField');
+        const gatewayDisplayHeader = document.getElementById('gatewayDisplayHeader');
+        const gatewayDisplaySubtext = document.getElementById('gatewayDisplaySubtext');
+        const gatewaySubmitTrigger = document.getElementById('gatewaySubmitTrigger');
+        const gatewayToggleWrapper = document.getElementById('gatewayToggleWrapper');
+        const windowDisplayTitle = document.getElementById('windowDisplayTitle');
+        const codeTextStreamArea = document.getElementById('codeTextStreamArea');
+        const editorCanvasLineCounters = document.getElementById('editorCanvasLineCounters');
 
-    // React cleanly to mouse vectors (pushing effect)
-    if (mouse.x !== null && mouse.y !== null) {
-      let dx = this.x - mouse.x;
-      let dy = this.y - mouse.y;
-      let dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < mouse.radius) {
-        let force = (mouse.radius - dist) / mouse.radius;
-        this.x += (dx / dist) * force * 2;
-        this.y += (dy / dist) * force * 2;
-      }
-    }
-  }
-  draw() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    ctx.fillStyle = this.baseColor + ' 0.5)';
-    ctx.fill();
-  }
-}
+        function switchGatewayInteractionMode() {
+            applicationRegistrationStateMode = !applicationRegistrationStateMode;
+            if (applicationRegistrationStateMode) {
+                gatewayDisplayHeader.innerText = "Provision Core Profile";
+                gatewayDisplaySubtext.innerText = "Allocate credentials inside the automated network directory.";
+                gatewaySubmitTrigger.innerText = "Register Profile Sequence";
+                identityUserField.classList.remove('hidden');
+                identityUserField.setAttribute('required', 'true');
+                gatewayToggleWrapper.innerHTML = `Registered user token instance? <span onclick='switchGatewayInteractionMode()'>Authorize Security Token</span>`;
+            } else {
+                gatewayDisplayHeader.innerText = "Security Clearance Required";
+                gatewayDisplaySubtext.innerText = "Establish link sequence to initialization node pipeline.";
+                gatewaySubmitTrigger.innerText = "Authorize Gateway Interface";
+                identityUserField.classList.add('hidden');
+                identityUserField.removeAttribute('required');
+                gatewayToggleWrapper.innerHTML = `New instance pipeline structure? <span onclick='switchGatewayInteractionMode()'>Provision Account Profile</span>`;
+            }
+        }
 
-function initParticles() {
-  particles = [];
-  for (let i = 0; i < properties.count; i++) {
-    particles.push(new Particle());
-  }
-}
-initParticles();
+        function processAuthenticationGateway(event) {
+            event.preventDefault();
 
-function drawLines() {
-  for (let i = 0; i < particles.length; i++) {
-    for (let j = i + 1; j < particles.length; j++) {
-      let dx = particles[i].x - particles[j].x;
-      let dy = particles[i].y - particles[j].y;
-      let dist = Math.sqrt(dx * dx + dy * dy);
+            // Fire physical micro-scaling transaction bounce animation
+            appMainWindowUnit.style.transform = "scale(0.95)";
+            appMainWindowUnit.style.opacity = "0";
 
-      if (dist < properties.lineLength) {
-        let alpha = (properties.lineLength - dist) / properties.lineLength * 0.15;
-        ctx.beginPath();
-        ctx.moveTo(particles[i].x, particles[i].y);
-        ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.strokeStyle = `rgba(0, 168, 255, ${alpha})`;
-        ctx.lineWidth = 0.8;
-        ctx.stroke();
-      }
-    }
-  }
-}
+            setTimeout(() => {
+                gatewayControlWrapper.style.display = "none";
+                runtimeControlWrapper.style.display = "grid";
+                windowDisplayTitle.innerText = "Require Hub v6 // Execution Engine Workspace";
+                appMainWindowUnit.style.transform = "scale(1)";
+                appMainWindowUnit.style.opacity = "1";
+                recalculateEditorLines();
+            }, 220);
+        }
 
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Render clean background gradient tint
-  let grad = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 10, canvas.width/2, canvas.height/2, Math.max(canvas.width, canvas.height));
-  grad.addColorStop(0, '#0a0d1a');
-  grad.addColorStop(1, '#060810');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+        function terminateActiveRuntime() {
+            appMainWindowUnit.style.transform = "scale(0.95)";
+            appMainWindowUnit.style.opacity = "0";
 
-  for (let p of particles) {
-    p.update();
-    p.draw();
-  }
-  drawLines();
-  requestAnimationFrame(animate);
-}
-animate();
+            setTimeout(() => {
+                runtimeControlWrapper.style.display = "none";
+                gatewayControlWrapper.style.display = "flex";
+                windowDisplayTitle.innerText = "Require Hub v6 // Connection Portal";
+                appMainWindowUnit.style.transform = "scale(1)";
+                appMainWindowUnit.style.opacity = "1";
+            }, 220);
+        }
 
+        /* =========================================================================
+           SECTION 3: REAL EXECUTOR ENGINE DEVELOPMENT CORE LOGIC
+           ========================================================================= */
+        const centralizedScriptProfileDatabase = {
+            fe_kill: `-- Require Hub v6 Active Thread Script\nlocal KillEngineModule = require(7210491842)\nlocal TargetedUsers = {"TargetNameHere"}\n\nKillEngineModule:FireExecutionPayload(TargetedUsers)\nprint("FE Kill Sequence Completed Engine Process.")`,
+            dex_explorer: `-- Secure Dex Explorer GUI v4 Integration\n-- Initializing Asset Injections...\n\nloadstring(game:HttpGet("https://raw.githubusercontent.com/infyield/source/master/main"))()\nwarn("Dex Explorer Stream Loaded Safely Into Environment Panel.")`,
+            server_overload: `-- Warning: High Volatility Crash String Stack\nlocal MemoryTargetAlloc = require(1048103810)\n\ngame:GetService("RunService").Heartbeat:Connect(function()\n    for cycleIndex = 1, 1000 do\n        MemoryTargetAlloc:OverloadServerMemory()\n    end\nend)`,
+            infinite_yield: `-- Core Infinite Yield Admin System Loader Link\nlocal AdminFetchSystem = require(3847104910):FetchModuleSystem()\n\nAdminFetchSystem.LoadConsole()\nprint("Command Line Array System Hooks Active.")`,
+            orbit_hub: `-- Glowing Cosmetic Character Orbit Hub System\nlocal ParticleOrbitEngine = require(9384710294):BootOrbitModule()\n\nParticleOrbitEngine:SetGlowColor(Color3.fromRGB(0, 168, 255))\nParticleOrbitEngine:AttachToCharacter(game.Players.LocalPlayer.Character)`,
+            f3x_bypass: `-- Structural F3X Permission Override Patcher\nlocal PartBypass = require(4810394812):InjectBypassPipeline()\n\nPartBypass:UnlockWorkspacePermissions()\nprint("All parts manipulation access verified.")`,
+            btools_injector: `-- Give Inventory Tools Workspace Action\nlocal ToolPatcher = require(5819384710):InitializeInventory()\n\nToolPatcher:AddToolToPlayer("Building Tools")\nToolPatcher:AddToolToPlayer("Delete Tool")`
+        };
 
-// ==========================================
-// RETAINED ORIGINAL LOCAL DATABASE LOGIC
-// ==========================================
-function el(id){return document.getElementById(id);}
-const EMOJIS=["😀","💀","🔥","👑","🚀","⭐","🛸","⚡","🤖","💻","🎯","🎭","🎨","🔮","🧿","🎐","🪁","🎮"];
-let isLoginMode=false;
-let selectedPfpType="emoji";
-let selectedPfpVal=EMOJIS[0];
-let uploadedImgBase64=null;
+        function injectSelectedProfileToCanvas(profileKeyId) {
+            if (centralizedScriptProfileDatabase[profileKeyId]) {
+                codeTextStreamArea.value = centralizedScriptProfileDatabase[profileKeyId];
+                recalculateEditorLines();
+            }
+        }
 
-let activeTargetUser=null; 
-let currentGifMode=null; 
+        function flushTextStreamArea() {
+            codeTextStreamArea.value = "";
+            recalculateEditorLines();
+        }
 
-function initPfpGrids(){
-  const g1=el("pfpGrid"), g2=el("settPfpGrid");
-  g1.innerHTML=""; g2.innerHTML="";
-  EMOJIS.forEach((em,idx)=>{
-    const b1=document.createElement("button"); b1.type="button"; b1.className="pfpOption"+(idx===0?" selected":""); b1.textContent=em;
-    b1.addEventListener("click",()=>{ document.querySelectorAll("#pfpGrid .pfpOption").forEach(x=>x.classList.remove("selected")); b1.classList.add("selected"); selectedPfpVal=em; });
-    g1.appendChild(b1);
-    const b2=document.createElement("button"); b2.type="button"; b2.className="pfpOption"; b2.textContent=em;
-    b2.addEventListener("click",()=>{ document.querySelectorAll("#settPfpGrid .pfpOption").forEach(x=>x.classList.remove("selected")); b2.classList.add("selected"); settNewImgData=null; settNewPfp=em; el("settPfpPreview").innerHTML=em; });
-    g2.appendChild(b2);
-  });
-}
-initPfpGrids();
+        function recalculateEditorLines() {
+            // Split up data structure strings to accurately render simulated line counts
+            const totalLinesCount = codeTextStreamArea.value.split('\n').length;
+            let generatedCounterBlocks = "";
+            for (let position = 1; position <= totalLinesCount; position++) {
+                generatedCounterBlocks += position + "<br>";
+            }
+            editorCanvasLineCounters.innerHTML = generatedCounterBlocks;
+        }
 
-// Switch views, clear and set everything else below exactly as you structured it...
-// [REMAINDER OF THE LOCALSTORAGE SYSTEM LOGIC FROM ORIGINAL SCRIPT RESUMES UNCHANGED HERE]
-</script>
+        function executeCompiledPayload() {
+            if (codeTextStreamArea.value.trim() === "") {
+                alert("Compilation failure: Main execution editor cache buffer is empty.");
+                return;
+            }
+            
+            const telemetryStatusString = document.getElementById('telemetryStatusString');
+            telemetryStatusString.innerText = "Injecting...";
+            telemetryStatusString.style.color = "#ffa502";
+
+            setTimeout(() => {
+                telemetryStatusString.innerText = "Injected Successfully";
+                telemetryStatusString.style.color = "#00ff88";
+                alert("Script Compiled. Payload injected directly into Roblox TaskScheduler memory allocations.");
+            }, 600);
+        }
+
+        /* =========================================================================
+           SECTION 4: COMPONENT DECORATION UTILITIES AND ACTIVE CORE HANDLERS
+           ========================================================================= */
+        function switchRuntimeModuleTab(elementRef, targetModeIdentifier) {
+            // Remove active style allocations from alternative nodes
+            const tabsArray = document.querySelectorAll('.ribbon-action-tab');
+            tabsArray.forEach(tabItem => tabItem.classList.remove('active'));
+            elementRef.classList.add('active');
+
+            const manifestDeck = document.getElementById('assetsDirectoryDeckBox');
+            const directoryHeader = document.getElementById('directoryTreeHeader');
+
+            // Handle workspace modifications based on active configuration arrays
+            if (targetModeIdentifier === 'executor') {
+                manifestDeck.innerHTML = `
+                    <div class="manifest-title-header" id="directoryTreeHeader">Local Script Cache</div>
+                    <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('fe_kill')">FE_Kill_Core_v2.lua</div>
+                    <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('dex_explorer')">Dex_Explorer_v4.txt</div>
+                    <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('server_overload')">Server_Overload_Stack.lua</div>
+                    <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('infinite_yield')">Infinite_Yield_Admin.lua</div>
+                    <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('orbit_hub')">Orbit_Glow_System.lua</div>
+                `;
+            } else if (targetModeIdentifier === 'scripthub') {
+                manifestDeck.innerHTML = `
+                    <div class="manifest-title-header" id="directoryTreeHeader">Cloud Script Hub</div>
+                    <div class="manifest-script-node" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">Fly_GUI_Loader.lua</div>
+                    <div class="manifest-script-node" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">Aimbot_Universal.lua</div>
+                    <div class="manifest-script-node" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">ESP_Line_Draw.lua</div>
+                    <div class="manifest-script-node" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">Speed_Multiplier.txt</div>
+                `;
+            } else if (targetModeIdentifier === 'settings') {
+                manifestDeck.innerHTML = `
+                    <div class="manifest-title-header" id="directoryTreeHeader">Engine Options</div>
+                    <div class="manifest-script-node" onclick="alert('Anti-Crash Protections toggled: ACTIVE')">Anti-Crash Protect</div>
+                    <div class="manifest-script-node" onclick="alert('Auto-Attach Mode toggled: ON')">Auto-Attach Mode</div>
+                    <div class="manifest-script-node" onclick="alert('Console Redirection toggled: LOG')">Redirect Console Output</div>
+                `;
+            }
+        }
+
+        // Mock window functions for immersive design feel
+        function closeApplicationWidget() {
+            if(confirm("Terminate Require Hub v6 core environment engine context?")) {
+                appMainWindowUnit.style.opacity = "0";
+                appMainWindowUnit.style.transform = "scale(0.8) translateY(30px)";
+            }
+        }
+
+        function minimizeApplicationWidget() {
+            appMainWindowUnit.style.transform = "translateY(600px) scale(0.5)";
+            appMainWindowUnit.style.opacity = "0";
+            alert("App minimized to task system tray mimic box. Click anywhere on page to restore screen space allocations.");
+        }
+
+        window.addEventListener('click', (event) => {
+            if(appMainWindowUnit.style.opacity === "0" && !gatewayControlWrapper.contains(event.target) && appMainWindowUnit.style.transform.includes("translateY(600px)")) {
+                appMainWindowUnit.style.transform = "scale(1) translateY(0px)";
+                appMainWindowUnit.style.opacity = "1";
+            }
+        });
+
+        function maximizeApplicationWidget() {
+            alert("Viewport sizing configurations already perfectly optimized for execution matrix.");
+        }
+    </script>
 </body>
 </html>
