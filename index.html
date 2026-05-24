@@ -336,6 +336,17 @@
             box-shadow: 0 0 20px rgba(0, 168, 255, 0.45);
         }
 
+        /* Target Injection Neon Highlight Styles */
+        .operation-execution-button.user-injection-trigger {
+            border-color: rgba(0, 255, 136, 0.3);
+            color: var(--accent-green);
+        }
+        .operation-execution-button.user-injection-trigger:hover {
+            background: rgba(0, 255, 136, 0.08);
+            border-color: var(--accent-green);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+        }
+
         .operation-execution-button.kill-switch-action {
             border-color: rgba(255, 71, 87, 0.3);
             color: var(--accent-red);
@@ -424,6 +435,10 @@
                         <button class="operation-execution-button primary-payload-fire" onclick="fireCompiledScriptPayloadStream()">Execute</button>
                         <button class="operation-execution-button" onclick="flushWorkspaceEditorTextAreaStream()">Clear Canvas</button>
                         <button class="operation-execution-button" onclick="attachToRobloxInstancePipeline()">Attach / Inject</button>
+                        
+                        <!-- NEW ADD ROBLOX USER TO EXECUTE SCRIPT INJECTION COMPONENT TRIGGER BUTTON -->
+                        <button class="operation-execution-button user-injection-trigger" onclick="addRobloxUserAndInjectPipeline()">Add Roblox User</button>
+                        
                         <button class="operation-execution-button kill-switch-action" onclick="disconnectSystemRuntimePipelineEngine()">Logout</button>
                     </div>
                     <div class="telemetry-stream-pipeline-status-text">Engine Connection State: <span id="telemetryDataStatusFeedbackStringLabel">Ready to Attach</span></div>
@@ -504,6 +519,7 @@
            ========================================================================= */
         let stateViewGatewayRegistrationActiveMode = false;
         let isAttachedToRobloxInstanceEngine = false;
+        let dynamicTargetRobloxUserToken = "";
 
         const authGatewayStructuralWrapper = document.getElementById('authGatewayStructuralWrapper');
         const runtimeWorkspaceStructuralWrapper = document.getElementById('runtimeWorkspaceStructuralWrapper');
@@ -573,6 +589,7 @@
                 
                 // Reset Inject Status
                 isAttachedToRobloxInstanceEngine = false;
+                dynamicTargetRobloxUserToken = "";
                 telemetryDataStatusFeedbackStringLabel.innerText = "Ready to Attach";
                 telemetryDataStatusFeedbackStringLabel.style.color = "var(--accent-cyan)";
             }, 240);
@@ -606,14 +623,37 @@
 
             setTimeout(() => {
                 isAttachedToRobloxInstanceEngine = true;
-                telemetryDataStatusFeedbackStringLabel.innerText = "Attached to Roblox Process";
+                telemetryDataStatusFeedbackStringLabel.innerText = "Attached to Global Process";
                 telemetryDataStatusFeedbackStringLabel.style.color = "var(--accent-green)";
             }, 1200);
         }
 
+        /* =========================================================================
+           NEW INTERACTION: DYNAMIC TARGET ROBLOX USER INJECTION ARCHITECTURE Hook
+           ========================================================================= */
+        function addRobloxUserAndInjectPipeline() {
+            const requestedUserHandle = prompt("Enter the exact Roblox Username to bind and hook injection pipeline threads to:");
+            
+            if (!requestedUserHandle || requestedUserHandle.trim() === "") {
+                alert("Injection Cancelled: Valid Roblox target handle signature required.");
+                return;
+            }
+
+            dynamicTargetRobloxUserToken = requestedUserHandle.trim();
+            telemetryDataStatusFeedbackStringLabel.innerText = `Injecting into User: [${dynamicTargetRobloxUserToken}]...`;
+            telemetryDataStatusFeedbackStringLabel.style.color = "var(--accent-yellow)";
+
+            setTimeout(() => {
+                isAttachedToRobloxInstanceEngine = true;
+                telemetryDataStatusFeedbackStringLabel.innerText = `Hooked and Attached to: ${dynamicTargetRobloxUserToken}`;
+                telemetryDataStatusFeedbackStringLabel.style.color = "var(--accent-green)";
+                alert(`Pipeline Successfully Routed! Memory hooks attached specifically to target context client process tracking identity user: "${dynamicTargetRobloxUserToken}". All script prints will deploy within this runtime block container.`);
+            }, 1000);
+        }
+
         function fireCompiledScriptPayloadStream() {
             if (!isAttachedToRobloxInstanceEngine) {
-                alert("Execution Error: You must Attach/Inject the executor into the process environment before compiled strings can run.");
+                alert("Execution Error: You must Attach/Inject or Add a Roblox User to hook the executor instance into a process environment before script lines can compile.");
                 return;
             }
 
@@ -622,13 +662,16 @@
                 return;
             }
             
+            const operationalLabelBackupState = telemetryDataStatusFeedbackStringLabel.innerText;
             telemetryDataStatusFeedbackStringLabel.innerText = "Running script payload thread...";
             telemetryDataStatusFeedbackStringLabel.style.color = "var(--accent-yellow)";
 
             setTimeout(() => {
-                telemetryDataStatusFeedbackStringLabel.innerText = "Attached to Roblox Process";
+                telemetryDataStatusFeedbackStringLabel.innerText = operationalLabelBackupState;
                 telemetryDataStatusFeedbackStringLabel.style.color = "var(--accent-green)";
-                alert("Script Compiled. Payload injected directly into active Roblox Environment via pipeline.");
+                
+                const scopeExecutionTargetContext = dynamicTargetRobloxUserToken ? `Target Active Identity Client: ${dynamicTargetRobloxUserToken}` : "Global Process Client Thread Space";
+                alert(`Script Compiled successfully!\n\nContext Target Layer: [${scopeExecutionTargetContext}]\nPayload bytecode stream fully deployed through active interface pipelines.`);
             }, 500);
         }
 
