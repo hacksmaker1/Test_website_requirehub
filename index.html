@@ -6,24 +6,22 @@
     <title>Require Hub v6 — Custom Roblox Executor</title>
     <style>
         /* =========================================================================
-           1. CORE CONFIGURATIONS & BLACK-AND-BLUE THEME ENGINE
+           1. THEME ENGINE & DESIGN TOKENS (Black & Blue Theme)
            ========================================================================= */
         :root {
-            --bg-dark-primary: #020204;       /* Deep obsidian black */
-            --bg-dark-secondary: #05070f;     /* Midnight blue undertone */
-            --bg-glass-panel: rgba(6, 8, 14, 0.85); /* Smooth translucent dark blue-black */
-            --bg-editor-canvas: #010205;      /* True black for high code contrast */
-            --border-glow-cyan: rgba(0, 168, 255, 0.25); /* Vibrant blue border aura */
-            --accent-cyan: #00a8ff;           /* Electric blue */
-            --accent-cyan-hover: #3faeff;     /* Radiant blue highlight */
+            --bg-dark-primary: #020204;
+            --bg-dark-secondary: #05070f;
+            --bg-glass-panel: rgba(6, 8, 14, 0.90);
+            --bg-editor-canvas: #010205; /* True Dark Pitch Black Canvas */
+            --accent-cyan: #00a8ff;
+            --accent-cyan-hover: #3faeff;
             --accent-green: #00ff88;
-            --accent-green-hover: #00cc6e;
             --accent-red: #ff4757;
             --accent-yellow: #ffa502;
             --text-pure-white: #ffffff;
-            --text-muted-gray: #5f7590;       /* Slate blue-gray for secondary elements */
-            --font-stack-main: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-            --font-stack-code: 'Consolas', 'Fira Code', 'Courier New', monospace;
+            --text-muted-gray: #5f7590;
+            --font-stack-main: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-stack-code: 'Consolas', 'Fira Code', monospace;
         }
 
         * {
@@ -32,7 +30,6 @@
             box-sizing: border-box;
             font-family: var(--font-stack-main);
             user-select: none;
-            -webkit-user-drag: none;
         }
 
         body, html {
@@ -45,9 +42,7 @@
             align-items: center;
         }
 
-        /* =========================================================================
-           2. INTERACTIVE PARTICLES INTERPOLATION BACKGROUND ENGINE
-           ========================================================================= */
+        /* Dynamic Animated Background Mesh */
         #bgCanvas {
             position: fixed;
             top: 0;
@@ -70,7 +65,7 @@
         }
 
         /* =========================================================================
-           3. EXPANDED APPLICATION MAIN WRAPPER WINDOW FRAME
+           2. EXECUTIVE CONTAINER FRAMEWORK (1100px Premium Layout)
            ========================================================================= */
         .app-window-shell {
             position: relative;
@@ -78,28 +73,22 @@
             background: var(--bg-glass-panel);
             backdrop-filter: blur(35px);
             -webkit-backdrop-filter: blur(35px);
-            border: 1px solid rgba(0, 168, 255, 0.15); 
+            border: 1px solid rgba(0, 168, 255, 0.2); 
             border-radius: 14px;
-            box-shadow: 0 40px 90px rgba(0, 0, 0, 0.95), 0 0 70px rgba(0, 168, 255, 0.06);
+            box-shadow: 0 40px 90px rgba(0, 0, 0, 0.95), 0 0 70px rgba(0, 168, 255, 0.08);
             color: var(--text-pure-white);
             overflow: hidden;
-            
-            /* Big Premium Scale Footprint */
             width: 1100px;  
             height: 680px;  
-            
             display: flex;
             flex-direction: column;
-            transform: scale(1);
-            opacity: 1;
-            transition: opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        /* Top Action Bar Component */
+        /* Top Window Header Controls Bar */
         .window-topbar-container {
             background: rgba(4, 5, 10, 0.95);
             padding: 18px 26px;
-            border-bottom: 1px solid rgba(0, 168, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 168, 255, 0.15);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -112,17 +101,7 @@
             letter-spacing: 2px;
             display: flex;
             align-items: center;
-            gap: 14px;
             text-transform: uppercase;
-        }
-
-        .topbar-identity-cluster img {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            border: 1px solid var(--accent-cyan);
-            box-shadow: 0 0 12px rgba(0, 168, 255, 0.5);
-            object-fit: cover;
         }
 
         .topbar-window-controls {
@@ -135,18 +114,13 @@
             height: 13px;
             border-radius: 50%;
             cursor: pointer;
-            transition: opacity 0.15s ease, transform 0.1s ease;
-        }
-        .window-control-circle:hover { 
-            opacity: 0.8; 
-            transform: scale(1.15);
         }
         .window-control-circle.close-proc { background: var(--accent-red); }
         .window-control-circle.min-proc { background: var(--accent-yellow); }
         .window-control-circle.max-proc { background: #27c93f; }
 
         /* =========================================================================
-           4. STAGE VIEWPORT 1: SECURE AUTHENTICATION SYSTEM
+           3. PORTAL ACCESS SYSTEM (Login Viewport Frame)
            ========================================================================= */
         .auth-viewport-wrapper {
             display: flex;
@@ -156,17 +130,6 @@
             flex-grow: 1;
             padding: 60px;
             text-align: center;
-        }
-
-        .auth-branding-logo {
-            width: 105px;
-            height: 105px;
-            border-radius: 50%;
-            border: 2px solid var(--accent-cyan);
-            margin-bottom: 28px;
-            box-shadow: 0 0 35px rgba(0, 168, 255, 0.35);
-            object-fit: cover;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .auth-viewport-wrapper h2 {
@@ -197,12 +160,10 @@
             font-size: 0.95rem;
             outline: none;
             margin-bottom: 18px;
-            transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .form-input-node:focus {
             border-color: var(--accent-cyan);
-            background: rgba(0, 168, 255, 0.02);
             box-shadow: 0 0 14px rgba(0, 168, 255, 0.25);
         }
 
@@ -216,36 +177,18 @@
             font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
-            transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
         }
 
         .form-submit-trigger-node:hover {
             background: var(--accent-cyan-hover);
             box-shadow: 0 0 25px rgba(0, 168, 255, 0.45);
         }
-        
-        .form-submit-trigger-node:active {
-            transform: scale(0.98);
-        }
-
-        .form-interactive-toggle-footer {
-            margin-top: 28px;
-            font-size: 0.85rem;
-            color: var(--text-muted-gray);
-        }
-
-        .form-interactive-toggle-footer span {
-            color: var(--accent-cyan);
-            cursor: pointer;
-            font-weight: 600;
-        }
-        .form-interactive-toggle-footer span:hover { text-decoration: underline; }
 
         /* =========================================================================
-           5. STAGE VIEWPORT 2: SINGLE FULL-WIDTH ROBLOX EXECUTOR WORKSPACE
+           4. WORKSPACE MATRIX PLATFORM (Massive Dark Text Editor Canvas Window)
            ========================================================================= */
         .runtime-viewport-wrapper {
-            display: none; 
+            display: none; /* Safely hides workspace until user hits 'Authorize' button */
             flex-grow: 1;
             height: calc(100% - 65px);
         }
@@ -261,11 +204,11 @@
         }
 
         .workspace-editor-canvas-box {
-            flex-grow: 1;
+            flex-grow: 1; /* Forces code engine box to expand completely vertically */
             background: var(--bg-editor-canvas);
-            border: 1px solid rgba(0, 168, 255, 0.08);
+            border: 1px solid rgba(0, 168, 255, 0.15);
             border-radius: 8px;
-            padding: 18px;
+            padding: 20px;
             display: flex;
             gap: 18px;
             overflow: hidden;
@@ -281,12 +224,12 @@
             user-select: none;
         }
 
-        .editor-code-processing-stream-area {
-            flex-grow: 1;
+        #workspaceCodeTextAreaStreamSource {
+            flex-grow: 1; /* Forces coding layout engine box to stretch fully wide */
             background: transparent;
             border: none;
             outline: none;
-            color: var(--accent-cyan);
+            color: var(--accent-cyan); /* High contrast electric blue font coding text */
             font-family: var(--font-stack-code);
             font-size: 1.05rem; 
             resize: none;
@@ -296,7 +239,7 @@
             overflow-y: auto;
         }
 
-        /* Workspace Footer Operational Layout Controls */
+        /* Interface Control Console Bar Footer Alignment Row */
         .workspace-operations-row {
             display: flex;
             justify-content: space-between;
@@ -336,25 +279,15 @@
             box-shadow: 0 0 20px rgba(0, 168, 255, 0.45);
         }
 
-        /* Target Injection Neon Highlight Styles */
+        /* NEON HIGHLIGHT COLOR SPECIFICALLY ROUTED FOR THE DYNAMIC INJECTION ACTION */
         .operation-execution-button.user-injection-trigger {
-            border-color: rgba(0, 255, 136, 0.3);
+            border-color: rgba(0, 255, 136, 0.4);
             color: var(--accent-green);
         }
         .operation-execution-button.user-injection-trigger:hover {
-            background: rgba(0, 255, 136, 0.08);
+            background: rgba(0, 255, 136, 0.1);
             border-color: var(--accent-green);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
-        }
-
-        .operation-execution-button.kill-switch-action {
-            border-color: rgba(255, 71, 87, 0.3);
-            color: var(--accent-red);
-        }
-
-        .operation-execution-button.kill-switch-action:hover {
-            background: rgba(255, 71, 87, 0.1);
-            border-color: var(--accent-red);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
         }
 
         .telemetry-stream-pipeline-status-text {
@@ -370,92 +303,75 @@
             color: var(--accent-cyan);
             font-weight: 700;
         }
-
-        /* ENGINE ACCESSIBILITY HELPERS */
-        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <!-- CORE INTERPOLATIVE GEOMETRIC BACKGROUND GRID CANVAS -->
+    <!-- VISUAL BACKGROUND PRESENTATION GRID LAYERS -->
     <canvas id="bgCanvas"></canvas>
     <div class="ambient-vignette"></div>
 
-    <!-- MAIN SYSTEM CORE INTERACTION WINDOW WRAPPER -->
+    <!-- MAIN APP WINDOW BOUNDARY LAYER -->
     <div class="app-window-shell" id="appRootWindowFrameBox">
         
-        <!-- FRAME CONTROLLER HEADER DESKTOP BAR -->
+        <!-- ROW HEADER CONTROLLER FRAME -->
         <div class="window-topbar-container">
             <div class="topbar-identity-cluster">
-                <img src="https://via.placeholder.com/50/00a8ff/ffffff?text=RH" alt="Require Hub Identity Hub Logo" id="windowGlobalProfileLogo">
                 <span id="windowDisplayDynamicTitle">Require Hub v6 // Connection Portal</span>
             </div>
             <div class="topbar-window-controls">
-                <div class="window-control-circle close-proc" onclick="closeApplicationContextFrame()" title="Terminate Engine Process Core"></div>
-                <div class="window-control-circle min-proc" onclick="minimizeApplicationContextFrame()" title="Suspend Allocations Frame"></div>
-                <div class="window-control-circle max-proc" onclick="maximizeApplicationContextFrame()" title="Optimize Memory View Boundaries"></div>
+                <div class="window-control-circle close-proc" onclick="closeApp()"></div>
+                <div class="window-control-circle min-proc" onclick="minimizeApp()"></div>
+                <div class="window-control-circle max-proc" onclick="maximizeApp()"></div>
             </div>
         </div>
 
-        <!-- STAGE PORTAL VIEWPORT 1: SECURE ACCREDITATION VERIFICATION (SIGN / LOGIN) -->
+        <!-- STAGE PORTAL VIEWPORT 1: PRE-AUTHENTICATION SECURITY LAYER -->
         <div class="auth-viewport-wrapper" id="authGatewayStructuralWrapper">
-            <img src="https://via.placeholder.com/150/00a8ff/ffffff?text=V6" class="auth-branding-logo" alt="Branding Interface Dynamic Core Loader" id="formBrandingDynamicLogo">
-            <h2 id="authGatewayMainHeadingTitleText">Security Clearance Required</h2>
-            <p class="auth-viewport-subtext" id="authGatewaySubHeadingText">Establish link sequence to initialization node pipeline.</p>
+            <h2>Security Clearance Required</h2>
+            <p class="auth-viewport-subtext">Establish link sequence to initialization node pipeline.</p>
             
-            <form class="auth-form-engine-module" onsubmit="handleAuthenticationGatewayFormProcessing(event)">
-                <input type="text" id="formFieldIdentityUsernameNode" class="form-input-node hidden" placeholder="Construct Unique Core Profile HandleID">
-                <input type="email" id="formFieldIdentityEmailNode" class="form-input-node" placeholder="System Registry Identifier Email" required>
-                <input type="password" id="formFieldIdentityPasswordNode" class="form-input-node" placeholder="Security Access Encryption Token" required>
-                
-                <button type="submit" class="form-submit-trigger-node" id="formSubmitActionTriggerButton">Authorize Gateway Interface</button>
+            <form class="auth-form-engine-module" onsubmit="handleAuthBypassSequence(event)">
+                <input type="email" class="form-input-node" placeholder="System Registry Identifier Email" required>
+                <input type="password" class="form-input-node" placeholder="Security Access Encryption Token" required>
+                <button type="submit" class="form-submit-trigger-node">Authorize Gateway Interface</button>
             </form>
-
-            <div class="form-interactive-toggle-footer" id="formActionToggleViewFooterWrapper">
-                New instance pipeline structure? <span onclick="switchAuthenticationGatewayViewMode()">Provision Account Profile</span>
-            </div>
         </div>
 
-        <!-- STAGE PORTAL VIEWPORT 2: PRODUCTION REAL RUNTIME DESKTOP COMPILATION WORKSPACE -->
+        <!-- STAGE PORTAL VIEWPORT 2: THE COMPILER INTERFACE (MASSIVE WORKSPACE AREA) -->
         <div class="runtime-viewport-wrapper" id="runtimeWorkspaceStructuralWrapper">
-            
-            <!-- EXECUTOR WORKSPACE DISPLAY TERMINAL PANEL (FULL WIDTH) -->
-            <div class="workspace-terminal-panel" id="workspaceEditorAreaViewWrapper">
+            <div class="workspace-terminal-panel">
                 <div class="workspace-editor-canvas-box">
-                    <!-- Line-Numbers Column Tracking Index Gutter -->
+                    
+                    <!-- Dynamic Line Index Numbers Gutter Tracking Stream Column -->
                     <div class="editor-line-number-gutter" id="editorLineCounterCanvasGutter">1<br>2<br>3<br>4<br>5</div>
                     
-                    <!-- Text Area Processing Stream Vector Area Block -->
+                    <!-- Main Text-Area Engine Container Canvas Slot -->
                     <textarea id="workspaceCodeTextAreaStreamSource" spellcheck="false" oninput="executeEditorCanvasLineNumbersRecalculation()">-- Require Hub v6 Official Roblox Executor Script Playground&#10;print("Executor Environment Loaded Successfully.")&#10;local Player = game:GetService("Players").LocalPlayer&#10;&#10;-- Paste or write your custom Roblox scripts below...</textarea>
                 </div>
 
-                <!-- Lower Function Buttons Operations Area Console Bar -->
+                <!-- Lower Layout Operations Control Bar Row Component Elements -->
                 <div class="workspace-operations-row">
                     <div class="operations-action-cluster-nodes">
                         <button class="operation-execution-button primary-payload-fire" onclick="fireCompiledScriptPayloadStream()">Execute</button>
                         <button class="operation-execution-button" onclick="flushWorkspaceEditorTextAreaStream()">Clear Canvas</button>
                         <button class="operation-execution-button" onclick="attachToRobloxInstancePipeline()">Attach / Inject</button>
                         
-                        <!-- NEW ADD ROBLOX USER TO EXECUTE SCRIPT INJECTION COMPONENT TRIGGER BUTTON -->
+                        <!-- ADD ROBLOX USER TARGET SPECIFIC INJECTION ROUTING BUTTON PANEL COMPONENT -->
                         <button class="operation-execution-button user-injection-trigger" onclick="addRobloxUserAndInjectPipeline()">Add Roblox User</button>
-                        
-                        <button class="operation-execution-button kill-switch-action" onclick="disconnectSystemRuntimePipelineEngine()">Logout</button>
                     </div>
                     <div class="telemetry-stream-pipeline-status-text">Engine Connection State: <span id="telemetryDataStatusFeedbackStringLabel">Ready to Attach</span></div>
                 </div>
             </div>
-
         </div>
 
     </div>
 
     <!-- =========================================================================
-       6. CORE JAVASCRIPT PROGRAMMATIC ARCHITECTURE OPERATIONS ENGINES PIPELINES
-       ========================================================================= -->
+       5. JAVASCRIPT EXECUTOR COMPILER PROGRAM ENGINE RUNTIME PIPELINES
+       ========================================================================= */ -->
     <script>
-        /* =========================================================================
-           OPERATIONS SECTOR A: MATHEMATICAL PROXEMIC PARTICLE NETWORK BACKGROUND
-           ========================================================================= */
+        /* INTERPOLATIVE MATRIX PARTICLE BACKGROUND SCRIPT CODE ENGINE */
         const canvas = document.getElementById('bgCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -514,93 +430,31 @@
         }
         systemBackgroundGraphicFrameLoopEngine();
 
-        /* =========================================================================
-           OPERATIONS SECTOR B: AUTHENTICATION INTERACTION CONTROLLERS SWITCH HOOKS
-           ========================================================================= */
-        let stateViewGatewayRegistrationActiveMode = false;
+        /* OPERATIONS CONTROL FUNCTIONS LOGICAL CONTROLLERS */
         let isAttachedToRobloxInstanceEngine = false;
         let dynamicTargetRobloxUserToken = "";
 
         const authGatewayStructuralWrapper = document.getElementById('authGatewayStructuralWrapper');
         const runtimeWorkspaceStructuralWrapper = document.getElementById('runtimeWorkspaceStructuralWrapper');
         const appRootWindowFrameBox = document.getElementById('appRootWindowFrameBox');
-        const formFieldIdentityUsernameNode = document.getElementById('formFieldIdentityUsernameNode');
-        const authGatewayMainHeadingTitleText = document.getElementById('authGatewayMainHeadingTitleText');
-        const authGatewaySubHeadingText = document.getElementById('authGatewaySubHeadingText');
-        const formSubmitActionTriggerButton = document.getElementById('formSubmitActionTriggerButton');
-        const formActionToggleViewFooterWrapper = document.getElementById('formActionToggleViewFooterWrapper');
         const windowDisplayDynamicTitle = document.getElementById('windowDisplayDynamicTitle');
         const workspaceCodeTextAreaStreamSource = document.getElementById('workspaceCodeTextAreaStreamSource');
         const editorLineCounterCanvasGutter = document.getElementById('editorLineCounterCanvasGutter');
-        const formBrandingDynamicLogo = document.getElementById('formBrandingDynamicLogo');
         const telemetryDataStatusFeedbackStringLabel = document.getElementById('telemetryDataStatusFeedbackStringLabel');
 
-        function switchAuthenticationGatewayViewMode() {
-            stateViewGatewayRegistrationActiveMode = !stateViewGatewayRegistrationActiveMode;
-            if (stateViewGatewayRegistrationActiveMode) {
-                authGatewayMainHeadingTitleText.innerText = "Provision Core Profile";
-                authGatewaySubHeadingText.innerText = "Allocate credentials inside the automated network directory.";
-                formSubmitActionTriggerButton.innerText = "Register Profile Sequence";
-                formFieldIdentityUsernameNode.classList.remove('hidden');
-                formFieldIdentityUsernameNode.setAttribute('required', 'true');
-                formActionToggleViewFooterWrapper.innerHTML = `Registered user token instance? <span onclick='switchAuthenticationGatewayViewMode()'>Authorize Security Token</span>`;
-                
-                formBrandingDynamicLogo.style.borderColor = "var(--accent-green)";
-                formBrandingDynamicLogo.style.boxShadow = "0 0 35px rgba(0, 255, 136, 0.35)";
-            } else {
-                authGatewayMainHeadingTitleText.innerText = "Security Clearance Required";
-                authGatewaySubHeadingText.innerText = "Establish link sequence to initialization node pipeline.";
-                formSubmitActionTriggerButton.innerText = "Authorize Gateway Interface";
-                formFieldIdentityUsernameNode.classList.add('hidden');
-                formFieldIdentityUsernameNode.removeAttribute('required');
-                formActionToggleViewFooterWrapper.innerHTML = `New instance pipeline structure? <span onclick='switchAuthenticationGatewayViewMode()'>Provision Account Profile</span>`;
-                
-                formBrandingDynamicLogo.style.borderColor = "var(--accent-cyan)";
-                formBrandingDynamicLogo.style.boxShadow = "0 0 35px rgba(0, 168, 255, 0.35)";
-            }
-        }
-
-        function handleAuthenticationGatewayFormProcessing(event) {
+        function handleAuthBypassSequence(event) {
             event.preventDefault();
-
             appRootWindowFrameBox.style.transform = "scale(0.95)";
             appRootWindowFrameBox.style.opacity = "0";
 
             setTimeout(() => {
                 authGatewayStructuralWrapper.style.display = "none";
                 runtimeWorkspaceStructuralWrapper.style.display = "block";
-                windowDisplayDynamicTitle.innerText = "Require Hub v6 // Execution Engine Workspace — Second Branch Official";
+                windowDisplayDynamicTitle.innerText = "Require Hub v6 // Execution Engine Workspace — Dedicated Executor Pipeline";
                 appRootWindowFrameBox.style.transform = "scale(1)";
                 appRootWindowFrameBox.style.opacity = "1";
                 executeEditorCanvasLineNumbersRecalculation();
             }, 240);
-        }
-
-        function disconnectSystemRuntimePipelineEngine() {
-            appRootWindowFrameBox.style.transform = "scale(0.95)";
-            appRootWindowFrameBox.style.opacity = "0";
-
-            setTimeout(() => {
-                runtimeWorkspaceStructuralWrapper.style.display = "none";
-                authGatewayStructuralWrapper.style.display = "flex";
-                windowDisplayDynamicTitle.innerText = "Require Hub v6 // Connection Portal";
-                appRootWindowFrameBox.style.transform = "scale(1)";
-                appRootWindowFrameBox.style.opacity = "1";
-                
-                // Reset Inject Status
-                isAttachedToRobloxInstanceEngine = false;
-                dynamicTargetRobloxUserToken = "";
-                telemetryDataStatusFeedbackStringLabel.innerText = "Ready to Attach";
-                telemetryDataStatusFeedbackStringLabel.style.color = "var(--accent-cyan)";
-            }, 240);
-        }
-
-        /* =========================================================================
-           OPERATIONS SECTOR C: LIVE CODE TERMINAL & EXECUTION INTERFACE ENGINE
-           ========================================================================= */
-        function flushWorkspaceEditorTextAreaStream() {
-            workspaceCodeTextAreaStreamSource.value = "";
-            executeEditorCanvasLineNumbersRecalculation();
         }
 
         function executeEditorCanvasLineNumbersRecalculation() {
@@ -612,12 +466,16 @@
             editorLineCounterCanvasGutter.innerHTML = counterIncrementalBlockMarkupStream;
         }
 
+        function flushWorkspaceEditorTextAreaStream() {
+            workspaceCodeTextAreaStreamSource.value = "";
+            executeEditorCanvasLineNumbersRecalculation();
+        }
+
         function attachToRobloxInstancePipeline() {
             if (isAttachedToRobloxInstanceEngine) {
                 alert("Engine Notification: Thread pipeline already attached to active process.");
                 return;
             }
-
             telemetryDataStatusFeedbackStringLabel.innerText = "Attaching DLL Link...";
             telemetryDataStatusFeedbackStringLabel.style.color = "var(--accent-yellow)";
 
@@ -628,9 +486,7 @@
             }, 1200);
         }
 
-        /* =========================================================================
-           NEW INTERACTION: DYNAMIC TARGET ROBLOX USER INJECTION ARCHITECTURE Hook
-           ========================================================================= */
+        /* TARGETED SYSTEM USER DATA INJECTION HANDLING TRIGGER */
         function addRobloxUserAndInjectPipeline() {
             const requestedUserHandle = prompt("Enter the exact Roblox Username to bind and hook injection pipeline threads to:");
             
@@ -645,7 +501,7 @@
 
             setTimeout(() => {
                 isAttachedToRobloxInstanceEngine = true;
-                telemetryDataStatusFeedbackStringLabel.innerText = `Hooked and Attached to: ${dynamicTargetRobloxUserToken}`;
+                telemetryDataStatusFeedbackStringLabel.innerText = `Hooked to User: ${dynamicTargetRobloxUserToken}`;
                 telemetryDataStatusFeedbackStringLabel.style.color = "var(--accent-green)";
                 alert(`Pipeline Successfully Routed! Memory hooks attached specifically to target context client process tracking identity user: "${dynamicTargetRobloxUserToken}". All script prints will deploy within this runtime block container.`);
             }, 1000);
@@ -653,7 +509,7 @@
 
         function fireCompiledScriptPayloadStream() {
             if (!isAttachedToRobloxInstanceEngine) {
-                alert("Execution Error: You must Attach/Inject or Add a Roblox User to hook the executor instance into a process environment before script lines can compile.");
+                alert("Execution Error: You must Attach/Inject or use 'Add Roblox User' to hook the executor instance into an active game process before scripts can run.");
                 return;
             }
 
@@ -675,28 +531,28 @@
             }, 500);
         }
 
-        // Window interaction scaling controls
-        function closeApplicationContextFrame() {
+        /* DESKTOP WINDOW INTERFACE MANAGEMENT CORE METHODS */
+        function closeApp() {
             if(confirm("Terminate executor environment framework engine process?")) {
                 appRootWindowFrameBox.style.opacity = "0";
                 appRootWindowFrameBox.style.transform = "scale(0.82) translateY(45px)";
             }
         }
 
-        function minimizeApplicationContextFrame() {
+        function minimizeApp() {
             appRootWindowFrameBox.style.transform = "translateY(800px) scale(0.35)";
             appRootWindowFrameBox.style.opacity = "0";
         }
 
         window.addEventListener('click', (surfaceClickEventTrackingContext) => {
-            if(appRootWindowFrameBox.style.opacity === "0" && !authGatewayStructuralWrapper.contains(surfaceClickEventTrackingContext.target) && appRootWindowFrameBox.style.transform.includes("translateY(800px)")) {
+            if(appRootWindowFrameBox.style.opacity === "0" && appRootWindowFrameBox.style.transform.includes("translateY(800px)")) {
                 appRootWindowFrameBox.style.transform = "scale(1) translateY(0px)";
                 appRootWindowFrameBox.style.opacity = "1";
             }
         });
 
-        function maximizeApplicationContextFrame() {
-            alert("Optimal layout scaling vector configurations already set up for desktop viewport mapping.");
+        function maximizeApp() {
+            alert("Optimal scaling vector limits already met for active display boundaries.");
         }
     </script>
 </body>
