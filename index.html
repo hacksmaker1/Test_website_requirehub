@@ -3,40 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Require Hub v6 — Official Production Engine</title>
+    <title>Require Hub v6 — Enterprise Production Build</title>
     <style>
-        /* --- RESET & CORE VARIABLES --- */
+        /* =========================================================================
+           1. CORE CONFIGURATIONS & DESIGN THEME ENGINE
+           ========================================================================= */
         :root {
-            --bg-main: #050508;
-            --panel-bg: rgba(10, 10, 14, 0.75);
-            --border-glow: rgba(0, 168, 255, 0.15);
+            --bg-dark-primary: #040406;
+            --bg-dark-secondary: #08080c;
+            --bg-glass-panel: rgba(11, 11, 16, 0.72);
+            --bg-editor-canvas: #020203;
+            --border-glow-cyan: rgba(0, 168, 255, 0.18);
+            --border-glow-green: rgba(0, 255, 136, 0.2);
             --accent-cyan: #00a8ff;
+            --accent-cyan-hover: #0097e6;
             --accent-green: #00ff88;
+            --accent-green-hover: #00cc6e;
             --accent-red: #ff4757;
-            --text-main: #ffffff;
-            --text-muted: #718093;
-            --editor-bg: #030305;
+            --accent-yellow: #ffa502;
+            --text-pure-white: #ffffff;
+            --text-muted-gray: #718093;
+            --font-stack-main: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            --font-stack-code: 'Consolas', 'Fira Code', 'Courier New', monospace;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            font-family: var(--font-stack-main);
             user-select: none;
+            -webkit-user-drag: none;
         }
 
         body, html {
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: var(--bg-main);
+            background-color: var(--bg-dark-primary);
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* --- THE ADVANCED PARTICLES BACKGROUND ENGINE --- */
+        /* =========================================================================
+           2. INTERACTIVE PARTICLES INTERPOLATION BACKGROUND ENGINE
+           ========================================================================= */
         #bgCanvas {
             position: fixed;
             top: 0;
@@ -47,49 +59,51 @@
             pointer-events: none;
         }
 
-        .ambient-shimmer {
+        .ambient-vignette {
             position: fixed;
             width: 100%;
             height: 100%;
             top: 0;
             left: 0;
-            background: radial-gradient(circle at center, rgba(0, 168, 255, 0.05) 0%, rgba(4, 4, 6, 0.98) 85%);
+            background: radial-gradient(circle at center, rgba(0, 168, 255, 0.03) 0%, rgba(4, 4, 6, 0.96) 85%);
             z-index: 2;
             pointer-events: none;
         }
 
-        /* --- MAIN EXECUTOR APPLICATION WINDOW CONTAINER --- */
-        .app-window {
+        /* =========================================================================
+           3. APPLICATION MAIN WRAPPER WINDOW FRAME
+           ========================================================================= */
+        .app-window-shell {
             position: relative;
             z-index: 10;
-            background: var(--panel-bg);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            background: var(--bg-glass-panel);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.85), 0 0 50px rgba(0, 168, 255, 0.03);
-            color: var(--text-main);
+            border-radius: 10px;
+            box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), 0 0 60px rgba(0, 168, 255, 0.04);
+            color: var(--text-pure-white);
             overflow: hidden;
-            width: 820px;
-            height: 510px;
+            width: 860px;
+            height: 540px;
             display: flex;
             flex-direction: column;
             transform: scale(1);
             opacity: 1;
-            transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        /* --- TOP WINDOW OPERATION BAR --- */
-        .window-topbar {
-            background: rgba(14, 14, 20, 0.9);
-            padding: 14px 20px;
+        /* Top Action Bar Component */
+        .window-topbar-container {
+            background: rgba(13, 13, 18, 0.92);
+            padding: 16px 24px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .topbar-identity {
+        .topbar-identity-cluster {
             font-size: 0.8rem;
             color: var(--accent-cyan);
             font-weight: 700;
@@ -100,92 +114,101 @@
             text-transform: uppercase;
         }
 
-        .topbar-identity img {
-            width: 22px;
-            height: 22px;
+        /* Dynamic Image / Logo Layout Holder */
+        .topbar-identity-cluster img {
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             border: 1px solid var(--accent-cyan);
-            box-shadow: 0 0 8px rgba(0, 168, 255, 0.4);
+            box-shadow: 0 0 10px rgba(0, 168, 255, 0.4);
+            object-fit: cover;
         }
 
-        .topbar-actions {
+        .topbar-window-controls {
             display: flex;
             gap: 8px;
         }
 
-        .action-circle {
+        .window-control-circle {
             width: 12px;
             height: 12px;
             border-radius: 50%;
             cursor: pointer;
-            transition: opacity 0.15s ease;
+            transition: opacity 0.15s ease, transform 0.1s ease;
         }
-        .action-circle:hover { opacity: 0.7; }
-        .action-circle.close-window { background: var(--accent-red); }
-        .action-circle.min-window { background: #ffbd2e; }
-        .action-circle.max-window { background: #27c93f; }
+        .window-control-circle:hover { 
+            opacity: 0.8; 
+            transform: scale(1.1);
+        }
+        .window-control-circle.close-proc { background: var(--accent-red); }
+        .window-control-circle.min-proc { background: var(--accent-yellow); }
+        .window-control-circle.max-proc { background: #27c93f; }
 
-        /* --- APPLICATION AREA VIEWPORT 1: SECURE AUTHENTICATION GATEWAY --- */
-        .gateway-container {
+        /* =========================================================================
+           4. STAGE VIEWPORT 1: SECURE ACCREDITATION SYSTEM (AUTHENTICATION)
+           ========================================================================= */
+        .auth-viewport-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             flex-grow: 1;
-            padding: 50px;
+            padding: 60px;
             text-align: center;
         }
 
-        .gateway-badge {
-            width: 90px;
-            height: 90px;
+        /* Logo Element Profile Image Box */
+        .auth-branding-logo {
+            width: 95px;
+            height: 95px;
             border-radius: 50%;
             border: 2px solid var(--accent-cyan);
-            margin-bottom: 22px;
-            box-shadow: 0 0 25px rgba(0, 168, 255, 0.25);
+            margin-bottom: 24px;
+            box-shadow: 0 0 30px rgba(0, 168, 255, 0.3);
             object-fit: cover;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .gateway-container h2 {
-            font-size: 1.5rem;
+        .auth-viewport-wrapper h2 {
+            font-size: 1.6rem;
             margin-bottom: 8px;
             font-weight: 600;
             letter-spacing: 0.5px;
         }
 
-        .gateway-subtext {
+        .auth-viewport-subtext {
             font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 30px;
+            color: var(--text-muted-gray);
+            margin-bottom: 32px;
         }
 
-        .gateway-form-engine {
+        .auth-form-engine-module {
             width: 100%;
-            max-width: 340px;
+            max-width: 350px;
         }
 
-        .form-input-field {
+        .form-input-node {
             width: 100%;
-            padding: 12px 16px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 13px 18px;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 6px;
             color: #fff;
             font-size: 0.9rem;
             outline: none;
             margin-bottom: 16px;
-            transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .form-input-field:focus {
+        .form-input-node:focus {
             border-color: var(--accent-cyan);
             background: rgba(0, 168, 255, 0.01);
-            box-shadow: 0 0 12px rgba(0, 168, 255, 0.12);
+            box-shadow: 0 0 12px rgba(0, 168, 255, 0.15);
         }
 
-        .form-trigger-button {
+        .form-submit-trigger-node {
             width: 100%;
-            padding: 12px;
+            padding: 13px;
             background: var(--accent-cyan);
             color: #fff;
             border: none;
@@ -193,53 +216,59 @@
             font-weight: 600;
             font-size: 0.95rem;
             cursor: pointer;
-            transition: background-color 0.2s, box-shadow 0.2s;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
         }
 
-        .form-trigger-button:hover {
-            background: #0097e6;
-            box-shadow: 0 0 20px rgba(0, 168, 255, 0.4);
+        .form-submit-trigger-node:hover {
+            background: var(--accent-cyan-hover);
+            box-shadow: 0 0 22px rgba(0, 168, 255, 0.4);
+        }
+        
+        .form-submit-trigger-node:active {
+            transform: scale(0.98);
         }
 
-        .form-footer-toggle {
-            margin-top: 24px;
+        .form-interactive-toggle-footer {
+            margin-top: 26px;
             font-size: 0.8rem;
-            color: var(--text-muted);
+            color: var(--text-muted-gray);
         }
 
-        .form-footer-toggle span {
+        .form-interactive-toggle-footer span {
             color: var(--accent-cyan);
             cursor: pointer;
             font-weight: 600;
         }
-        .form-footer-toggle span:hover { text-decoration: underline; }
+        .form-interactive-toggle-footer span:hover { text-decoration: underline; }
 
-        /* --- APPLICATION AREA VIEWPORT 2: REQUIRE HUB RUNTIME DESKTOP --- */
-        .runtime-container {
-            display: none; /* Injected by Javascript Gateway */
+        /* =========================================================================
+           5. STAGE VIEWPORT 2: PRODUCTION RUNTIME ENVIRONMENT (REQUIRE HUB MAIN PANEL)
+           ========================================================================= */
+        .runtime-viewport-wrapper {
+            display: none; /* Synchronized into workspace layout matrix by JS system flow */
             flex-grow: 1;
-            grid-template-columns: 70px 200px 1fr;
-            height: calc(100% - 51px);
+            grid-template-columns: 75px 210px 1fr;
+            height: calc(100% - 57px);
         }
 
-        /* COLUMN A: RIBBON UTILITY BUTTONS SIDEBAR */
-        .utility-ribbon {
-            background: rgba(12, 12, 16, 0.8);
+        /* SECTOR 1: SIDE BAR NAV UTILITY TAB SECTOR */
+        .ribbon-action-sidebar {
+            background: rgba(11, 11, 15, 0.85);
             border-right: 1px solid rgba(255, 255, 255, 0.03);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 25px 0;
+            padding: 26px 0;
             gap: 24px;
         }
 
-        .ribbon-action-tab {
-            width: 40px;
-            height: 40px;
+        .sidebar-action-tab-button {
+            width: 44px;
+            height: 44px;
             background: rgba(255, 255, 255, 0.01);
             border: 1px solid rgba(255, 255, 255, 0.04);
             border-radius: 8px;
-            color: var(--text-muted);
+            color: var(--text-muted-gray);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -247,58 +276,58 @@
             font-size: 0.75rem;
             font-weight: 700;
             letter-spacing: 0.5px;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        .ribbon-action-tab.active, .ribbon-action-tab:hover {
+        .sidebar-action-tab-button.active, .sidebar-action-tab-button:hover {
             color: var(--accent-cyan);
             border-color: var(--accent-cyan);
             background: rgba(0, 168, 255, 0.05);
-            box-shadow: 0 0 12px rgba(0, 168, 255, 0.15);
+            box-shadow: 0 0 14px rgba(0, 168, 255, 0.18);
         }
 
-        .ribbon-action-tab.system-kill-trigger {
+        .sidebar-action-tab-button.disconnect-kill-switch {
             margin-top: auto;
             color: var(--accent-red);
-            border-color: rgba(255, 71, 87, 0.2);
+            border-color: rgba(255, 71, 87, 0.18);
         }
-        .ribbon-action-tab.system-kill-trigger:hover {
-            background: rgba(255, 71, 87, 0.1);
+        .sidebar-action-tab-button.disconnect-kill-switch:hover {
+            background: rgba(255, 71, 87, 0.12);
             border-color: var(--accent-red);
-            box-shadow: 0 0 12px rgba(255, 71, 87, 0.2);
+            box-shadow: 0 0 14px rgba(255, 71, 87, 0.25);
         }
 
-        /* COLUMN B: ASSETS DIRECTORY MANIFEST BLOCK */
-        .assets-manifest-deck {
-            background: rgba(6, 6, 9, 0.65);
+        /* SECTOR 2: DIRECTORY ARCHIVE SYSTEM TREE GRID */
+        .directory-manifest-panel {
+            background: rgba(6, 6, 9, 0.7);
             border-right: 1px solid rgba(255, 255, 255, 0.03);
-            padding: 20px 12px;
+            padding: 22px 14px;
             display: flex;
             flex-direction: column;
             gap: 8px;
             overflow-y: auto;
         }
 
-        .assets-manifest-deck::-webkit-scrollbar {
+        .directory-manifest-panel::-webkit-scrollbar {
             width: 4px;
         }
-        .assets-manifest-deck::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.05);
+        .directory-manifest-panel::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.06);
             border-radius: 10px;
         }
 
-        .manifest-title-header {
+        .directory-header-node-title {
             font-size: 0.7rem;
             color: #57606f;
             text-transform: uppercase;
             font-weight: 800;
             letter-spacing: 1.5px;
             padding-left: 8px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
-        .manifest-script-node {
-            padding: 10px 14px;
+        .directory-list-script-item {
+            padding: 11px 14px;
             background: rgba(255, 255, 255, 0.01);
             border: 1px solid transparent;
             border-radius: 5px;
@@ -309,54 +338,53 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
         }
 
-        .manifest-script-node:hover {
+        .directory-list-script-item:hover {
             background: rgba(255, 255, 255, 0.03);
-            border-color: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.07);
             padding-left: 18px;
             color: #ffffff;
         }
 
-        /* COLUMN C: DEVELOPMENT WORKSPACE PANEL STYLING (THE CODE EDITOR AREA) */
-        .workspace-interactive-deck {
-            padding: 20px;
+        /* SECTOR 3: MAIN DEVELOPMENT WORKSPACE (EDITOR FRAME BLOCK) */
+        .workspace-terminal-panel {
+            padding: 22px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            background: #050508;
+            gap: 16px;
+            background: #040407;
         }
 
-        /* Full line-number simulation workspace */
-        .editor-workspace-canvas {
+        .workspace-editor-canvas-box {
             flex-grow: 1;
-            background: var(--editor-bg);
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: var(--bg-editor-canvas);
+            border: 1px solid rgba(255, 255, 255, 0.03);
             border-radius: 6px;
-            padding: 15px;
+            padding: 16px;
             display: flex;
-            gap: 15px;
+            gap: 16px;
             overflow: hidden;
             position: relative;
         }
 
-        .editor-line-counters {
+        .editor-line-number-gutter {
             text-align: right;
-            font-family: 'Consolas', 'Fira Code', monospace;
+            font-family: var(--font-stack-code);
             font-size: 0.85rem;
-            color: #333344;
+            color: #2c2c3e;
             line-height: 1.5;
             user-select: none;
         }
 
-        .editor-input-processing-stream {
+        .editor-code-processing-stream-area {
             flex-grow: 1;
             background: transparent;
             border: none;
             outline: none;
             color: var(--accent-cyan);
-            font-family: 'Consolas', 'Fira Code', monospace;
+            font-family: var(--font-stack-code);
             font-size: 0.85rem;
             resize: none;
             line-height: 1.5;
@@ -365,146 +393,147 @@
             overflow-y: auto;
         }
 
-        /* Operations Control Footprint Row */
-        .workspace-operations-bar {
+        /* Workspace Core Actions Bar */
+        .workspace-operations-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .operations-trigger-cluster {
+        .operations-action-cluster-nodes {
             display: flex;
             gap: 12px;
         }
 
-        .execution-button-node {
-            padding: 10px 22px;
+        .operation-execution-button {
+            padding: 11px 24px;
             font-size: 0.8rem;
             font-weight: 700;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.01);
             color: #ffffff;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.15s ease;
         }
 
-        .execution-button-node:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.15);
+        .operation-execution-button:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.12);
         }
 
-        .execution-button-node.action-execute {
+        .operation-execution-button.primary-payload-fire {
             background: var(--accent-cyan);
             color: #ffffff;
             border: none;
         }
 
-        .execution-button-node.action-execute:hover {
-            background: #0097e6;
-            box-shadow: 0 0 15px rgba(0, 168, 255, 0.35);
+        .operation-execution-button.primary-payload-fire:hover {
+            background: var(--accent-cyan-hover);
+            box-shadow: 0 0 16px rgba(0, 168, 255, 0.35);
         }
 
-        .telemetry-pipeline-status {
+        .telemetry-stream-pipeline-status-text {
             font-size: 0.75rem;
-            color: var(--text-muted);
-            font-family: monospace;
+            color: var(--text-muted-gray);
+            font-family: var(--font-stack-code);
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .telemetry-pipeline-status span {
+        .telemetry-stream-pipeline-status-text span {
             color: var(--accent-green);
             font-weight: 700;
         }
 
-        /* HELPER VISIBILITY STYLES */
+        /* SYSTEM CORE VISIBILITY MODIFIERS */
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <!-- DIGITAL INTERCONNECTED NODE DOT MATRIX CANVAS -->
+    <!-- DIGITAL SPATIAL CONNECTED VECTOR POINT DATA Canvas Engine -->
     <canvas id="bgCanvas"></canvas>
-    <div class="ambient-shimmer"></div>
+    <div class="ambient-vignette"></div>
 
-    <!-- MAIN CORE FRAMEWORK SHELL -->
-    <div class="app-window" id="appMainWindowUnit">
+    <!-- MAIN SYSTEM INTERACTION CORE ARCHITECTURE PANEL -->
+    <div class="app-window-shell" id="appRootWindowFrameBox">
         
-        <!-- SYSTEM TOP NAVBAR CONTROL FRAME -->
-        <div class="window-topbar">
-            <div class="topbar-identity">
-                <img src="https://via.placeholder.com/50/00a8ff/ffffff?text=RH" alt="Require Hub Icon" id="appGlobalIcon">
-                <span id="windowDisplayTitle">Require Hub v6 // Connection Portal</span>
+        <!-- WINDOW INTERACTION TOPBAR PANEL CONTAINER -->
+        <div class="window-topbar-container">
+            <div class="topbar-identity-cluster">
+                <!-- Replace with your server profile layout image asset path link -->
+                <img src="https://via.placeholder.com/50/00a8ff/ffffff?text=RH" alt="Require Hub Icon Avatar" id="windowGlobalProfileLogo">
+                <span id="windowDisplayDynamicTitle">Require Hub v6 // Connection Portal</span>
             </div>
-            <div class="topbar-actions">
-                <div class="action-circle close-window" onclick="closeApplicationWidget()" title="Terminate Process"></div>
-                <div class="action-circle min-window" onclick="minimizeApplicationWidget()" title="Suspend Window"></div>
-                <div class="action-circle max-window" onclick="maximizeApplicationWidget()" title="Expand Allocation"></div>
+            <div class="topbar-window-controls">
+                <div class="window-control-circle close-proc" onclick="closeApplicationContextFrame()" title="Terminate Process Environment"></div>
+                <div class="window-control-circle min-proc" onclick="minimizeApplicationContextFrame()" title="Suspend Allocations View"></div>
+                <div class="window-control-circle max-proc" onclick="maximizeApplicationContextFrame()" title="Scale Memory Workspace View"></div>
             </div>
         </div>
 
-        <!-- STAGE MODULE 1: AUTHENTICATION ENTRANCE CONTROL GATEWAY -->
-        <div class="gateway-container" id="gatewayControlWrapper">
-            <img src="https://via.placeholder.com/150/00a8ff/ffffff?text=V6" class="gateway-badge" alt="Loader Profile Asset">
-            <h2 id="gatewayDisplayHeader">Security Clearance Required</h2>
-            <p class="gateway-subtext" id="gatewayDisplaySubtext">Establish link sequence to initialization node pipeline.</p>
+        <!-- APP INTERACTION VIEWPORT STAGE 1: AUTHENTICATION INITIALIZATION ENTRY NODE -->
+        <div class="auth-viewport-wrapper" id="authGatewayStructuralWrapper">
+            <img src="https://via.placeholder.com/150/00a8ff/ffffff?text=V6" class="auth-branding-logo" alt="Branding Loader Logo Container" id="formBrandingDynamicLogo">
+            <h2 id="authGatewayMainHeadingTitleText">Security Clearance Required</h2>
+            <p class="auth-viewport-subtext" id="authGatewaySubHeadingText">Establish link sequence to initialization node pipeline.</p>
             
-            <form class="gateway-form-engine" onsubmit="processAuthenticationGateway(event)">
-                <input type="text" id="identityUserField" class="form-input-field hidden" placeholder="Construct Core Access HandleID">
-                <input type="email" id="identityEmailField" class="form-input-field" placeholder="System Registry Identifier Email" required>
-                <input type="password" id="identityPasswordField" class="form-input-field" placeholder="Security Access Encryption Token" required>
+            <form class="auth-form-engine-module" onsubmit="handleAuthenticationGatewayFormProcessing(event)">
+                <input type="text" id="formFieldIdentityUsernameNode" class="form-input-node hidden" placeholder="Construct Unique Core Profile HandleID">
+                <input type="email" id="formFieldIdentityEmailNode" class="form-input-node" placeholder="System Registry Identifier Email" required>
+                <input type="password" id="formFieldIdentityPasswordNode" class="form-input-node" placeholder="Security Access Encryption Token" required>
                 
-                <button type="submit" class="form-trigger-button" id="gatewaySubmitTrigger">Authorize Gateway Interface</button>
+                <button type="submit" class="form-submit-trigger-node" id="formSubmitActionTriggerButton">Authorize Gateway Interface</button>
             </form>
 
-            <div class="form-footer-toggle" id="gatewayToggleWrapper">
-                New instance pipeline structure? <span onclick="switchGatewayInteractionMode()">Provision Account Profile</span>
+            <div class="form-interactive-toggle-footer" id="formActionToggleViewFooterWrapper">
+                New instance pipeline structure? <span onclick="switchAuthenticationGatewayViewMode()">Provision Account Profile</span>
             </div>
         </div>
 
-        <!-- STAGE MODULE 2: PRODUCTION REAL EXECUTOR SYSTEM RUNTIME ENVIRONMENT -->
-        <div class="runtime-container" id="runtimeControlWrapper">
+        <!-- APP INTERACTION VIEWPORT STAGE 2: SYSTEM RUNTIME INTERACTIVE ENVIRONMENT (THE REQUIRE HUB DESKTOP) -->
+        <div class="runtime-viewport-wrapper" id="runtimeWorkspaceStructuralWrapper">
             
-            <!-- PANEL SECTOR A: VERTICAL ICON RIBBON ACTION NAVIGATION -->
-            <div class="utility-ribbon">
-                <div class="ribbon-action-tab active" onclick="switchRuntimeModuleTab(this, 'executor')" title="Workspace Engine Suite">EXE</div>
-                <div class="ribbon-action-tab" onclick="switchRuntimeModuleTab(this, 'scripthub')" title="Central Cloud Index Scripts">HUB</div>
-                <div class="ribbon-action-tab" onclick="switchRuntimeModuleTab(this, 'settings')" title="Core Interface Modifications">SET</div>
-                <div class="ribbon-action-tab system-kill-trigger" onclick="terminateActiveRuntime()" title="Disconnect Engine System Pipeline">SYS</div>
+            <!-- COLUMN SECTOR BLOCK A: ACCENTED ICON STRIP TOOLBAR SIDEBAR PANEL -->
+            <div class="ribbon-action-sidebar">
+                <div class="sidebar-action-tab-button active" onclick="handleRuntimeNavigationModuleViewShift(this, 'executor')" title="Workspace Engine Terminal Suite">EXE</div>
+                <div class="sidebar-action-tab-button" onclick="handleRuntimeNavigationModuleViewShift(this, 'scripthub')" title="Central Cloud Index Scripts Library">HUB</div>
+                <div class="sidebar-action-tab-button" onclick="handleRuntimeNavigationModuleViewShift(this, 'settings')" title="Core Interface System Modifications">SET</div>
+                <div class="sidebar-action-tab-button disconnect-kill-switch" onclick="disconnectSystemRuntimePipelineEngine()" title="Disconnect Engine Pipeline Context">SYS</div>
             </div>
 
-            <!-- PANEL SECTOR B: SCRIPTS DIRECTORY NODAL MANIFEST TREE -->
-            <div class="assets-manifest-deck" id="assetsDirectoryDeckBox">
-                <div class="manifest-title-header" id="directoryTreeHeader">Local Script Cache</div>
-                <!-- Dynamic Nodes Hook Array -->
-                <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('fe_kill')">FE_Kill_Core_v2.lua</div>
-                <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('dex_explorer')">Dex_Explorer_v4.txt</div>
-                <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('server_overload')">Server_Overload_Stack.lua</div>
-                <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('infinite_yield')">Infinite_Yield_Admin.lua</div>
-                <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('orbit_hub')">Orbit_Glow_System.lua</div>
-                <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('f3x_bypass')">F3X_Server_Bypass.lua</div>
-                <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('btools_injector')">BTools_Inventory_Patcher.txt</div>
+            <!-- COLUMN SECTOR BLOCK B: LOCAL CACHED SCRIPTS DIRECTORY MANIFEST BLOCK -->
+            <div class="directory-manifest-panel" id="directoryNodalManifestDeckContainer">
+                <div class="directory-header-node-title" id="directorySectionHeaderLabel">Local Script Cache</div>
+                <!-- Interactive Profile Hook Target Matrix List Arrays -->
+                <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('fe_kill')">FE_Kill_Core_v2.lua</div>
+                <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('dex_explorer')">Dex_Explorer_v4.txt</div>
+                <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('server_overload')">Server_Overload_Stack.lua</div>
+                <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('infinite_yield')">Infinite_Yield_Admin.lua</div>
+                <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('orbit_hub')">Orbit_Glow_System.lua</div>
+                <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('f3x_bypass')">F3X_Server_Bypass.lua</div>
+                <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('btools_injector')">BTools_Inventory_Patcher.txt</div>
             </div>
 
-            <!-- PANEL SECTOR C: LIVE CODE WORKSPACE DEVELOPMENT INTERACTION DECK -->
-            <div class="workspace-interactive-deck" id="workspaceMainDevelopmentDeck">
-                <div class="editor-workspace-canvas">
-                    <!-- Line-Numbering Simulation Core -->
-                    <div class="editor-line-counters" id="editorCanvasLineCounters">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17</div>
+            <!-- COLUMN SECTOR BLOCK C: DATA WORKSPACE EDITABLE ENVIRONMENT (THE LINE NUMBER CODING ENVIRONMENT) -->
+            <div class="workspace-terminal-panel" id="workspaceEditorAreaViewWrapper">
+                <div class="workspace-editor-canvas-box">
+                    <!-- Line-Numbering Counter Simulation Core Tracking Vector Track column -->
+                    <div class="editor-line-number-gutter" id="editorLineCounterCanvasGutter">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17</div>
                     
-                    <!-- Editable Code Matrix Block -->
-                    <textarea id="codeTextStreamArea" spellcheck="false" oninput="recalculateEditorLines()">-- Require Hub v6 Active Module Target Pipeline Loader&#10;local RequireEngine = require(8347104819)&#10;RequireEngine.load("MainServerEngine")</textarea>
+                    <!-- Textstream Editable Core Node Area box -->
+                    <textarea id="workspaceCodeTextAreaStreamSource" spellcheck="false" oninput="executeEditorCanvasLineNumbersRecalculation()">-- Require Hub v6 Active Module Target Pipeline Loader&#10;local RequireEngine = require(8347104819)&#10;RequireEngine.load("MainServerEngine")</textarea>
                 </div>
 
-                <!-- Lower Function Operations Control Execution Row -->
-                <div class="workspace-operations-bar">
-                    <div class="operations-trigger-cluster">
-                        <button class="execution-button-node action-execute" onclick="executeCompiledPayload()">Execute Script</button>
-                        <button class="execution-button-node" onclick="flushTextStreamArea()">Clear Canvas</button>
+                <!-- Lower Operations Action Matrix Control Buttons Row bar layout footer -->
+                <div class="workspace-operations-row">
+                    <div class="operations-action-cluster-nodes">
+                        <button class="operation-execution-button primary-payload-fire" onclick="fireCompiledScriptPayloadStream()">Execute Script</button>
+                        <button class="operation-execution-button" onclick="flushWorkspaceEditorTextAreaStream()">Clear Canvas</button>
                     </div>
-                    <div class="telemetry-pipeline-status">Engine State: <span id="telemetryStatusString">Ready to Inject</span></div>
+                    <div class="telemetry-stream-pipeline-status-text">Engine State: <span id="telemetryDataStatusFeedbackStringLabel">Ready to Inject</span></div>
                 </div>
             </div>
 
@@ -512,143 +541,154 @@
 
     </div>
 
-    <!-- --- PROGRAMMATIC OPERATIONS ARCHITECTURE ENGINE (JAVASCRIPT) --- -->
+    <!-- =========================================================================
+       6. PROGRAMMATIC FRAMEWORK ENGINE OPERATION PIPELINES (JAVASCRIPT RUNTIME)
+       ========================================================================= */ -->
     <script>
         /* =========================================================================
-           SECTION 1: MATHEMATICAL SPACE NETWORK PARTICLE INTERPOLATION BG SYSTEM
+           OPERATIONS SECTOR A: RESPONSIVE MATHEMATICAL GEOMETRIC DATA BG MATRIX ENGINE
            ========================================================================= */
         const canvas = document.getElementById('bgCanvas');
         const ctx = canvas.getContext('2d');
 
-        let viewportWidth = canvas.width = window.innerWidth;
-        let viewportHeight = canvas.height = window.innerHeight;
+        let layoutWidthVector = canvas.width = window.innerWidth;
+        let layoutHeightVector = canvas.height = window.innerHeight;
 
         window.addEventListener('resize', () => {
-            viewportWidth = canvas.width = window.innerWidth;
-            viewportHeight = canvas.height = window.innerHeight;
+            layoutWidthVector = canvas.width = window.innerWidth;
+            layoutHeightVector = canvas.height = window.innerHeight;
         });
 
-        const trackingMatrixNodes = [];
-        const spatialNodeDensity = 110;
+        const activeCoordinatesNodeCluster = [];
+        const networkCalculationDensityLimit = 120;
 
-        // Populate geometric spatial vectors
-        for (let i = 0; i < spatialNodeDensity; i++) {
-            trackingMatrixNodes.push({
-                positionX: Math.random() * viewportWidth,
-                positionY: Math.random() * viewportHeight,
-                velocityX: (Math.random() - 0.5) * 1.5,
-                velocityY: (Math.random() - 0.5) * 1.5,
-                nodeRadius: Math.random() * 2 + 1
+        // Provision structural spatial grid locations vectors tracking matrices points
+        for (let idx = 0; idx < networkCalculationDensityLimit; idx++) {
+            activeCoordinatesNodeCluster.push({
+                spatialX: Math.random() * layoutWidthVector,
+                spatialY: Math.random() * layoutHeightVector,
+                speedX: (Math.random() - 0.5) * 1.6,
+                speedY: (Math.random() - 0.5) * 1.6,
+                coordinateRadius: Math.random() * 2 + 1
             });
         }
 
-        function executionRenderLoopEngine() {
-            ctx.clearRect(0, 0, viewportWidth, viewportHeight);
+        function systemBackgroundGraphicFrameLoopEngine() {
+            ctx.clearRect(0, 0, layoutWidthVector, layoutHeightVector);
             ctx.fillStyle = "rgba(0, 168, 255, 0.45)";
 
-            // Map operations through nodal configurations
-            for (let idx = 0; idx < trackingMatrixNodes.length; idx++) {
-                let targetNode = trackingMatrixNodes[idx];
-                targetNode.positionX += targetNode.velocityX;
-                targetNode.positionY += targetNode.velocityY;
+            // Parse structural positional movements vector locations points arrays
+            for (let cursorIdx = 0; cursorIdx < activeCoordinatesNodeCluster.length; cursorIdx++) {
+                let movingNode = activeCoordinatesNodeCluster[cursorIdx];
+                movingNode.spatialX += movingNode.speedX;
+                movingNode.spatialY += movingNode.speedY;
 
-                // Handle boundaries collisions smoothly
-                if (targetNode.positionX < 0 || targetNode.positionX > viewportWidth) targetNode.velocityX *= -1;
-                if (targetNode.positionY < 0 || targetNode.positionY > viewportHeight) targetNode.velocityY *= -1;
+                // Handle boundary collisions transitions
+                if (movingNode.spatialX < 0 || movingNode.spatialX > layoutWidthVector) movingNode.speedX *= -1;
+                if (movingNode.spatialY < 0 || movingNode.spatialY > layoutHeightVector) movingNode.speedY *= -1;
 
                 ctx.beginPath();
-                ctx.arc(targetNode.positionX, targetNode.positionY, targetNode.nodeRadius, 0, Math.PI * 2);
+                ctx.arc(movingNode.spatialX, movingNode.movingNode = movingNode.spatialY, movingNode.coordinateRadius, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Compute linear proximity distances between network intersections
-                for (let innerIdx = idx + 1; innerIdx < trackingMatrixNodes.length; innerIdx++) {
-                    let relationalNode = trackingMatrixNodes[innerIdx];
-                    let mathematicalDistance = Math.hypot(targetNode.positionX - relationalNode.positionX, targetNode.positionY - relationalNode.positionY);
+                // Compute proxemic coordinate lengths metrics to connect path lines matrices loops
+                for (let relationalCursorIdx = cursorIdx + 1; relationalCursorIdx < activeCoordinatesNodeCluster.length; relationalCursorIdx++) {
+                    let benchmarkNode = activeCoordinatesNodeCluster[relationalCursorIdx];
+                    let absoluteDistanceHypot = Math.hypot(movingNode.spatialX - benchmarkNode.spatialX, movingNode.spatialY - benchmarkNode.spatialY);
 
-                    if (mathematicalDistance < 125) {
-                        ctx.strokeStyle = `rgba(0, 168, 255, ${1 - (mathematicalDistance / 125) * 0.98})`;
+                    if (absoluteDistanceHypot < 130) {
+                        ctx.strokeStyle = `rgba(0, 168, 255, ${1 - (absoluteDistanceHypot / 130) * 0.98})`;
                         ctx.lineWidth = 0.5;
                         ctx.beginPath();
-                        ctx.moveTo(targetNode.positionX, targetNode.positionY);
-                        ctx.lineTo(relationalNode.positionX, relationalNode.positionY);
+                        ctx.moveTo(movingNode.spatialX, movingNode.spatialY);
+                        ctx.lineTo(benchmarkNode.spatialX, benchmarkNode.spatialY);
                         ctx.stroke();
                     }
                 }
             }
-            requestAnimationFrame(executionRenderLoopEngine);
+            requestAnimationFrame(systemBackgroundGraphicFrameLoopEngine);
         }
-        executionRenderLoopEngine(); // Boot background graphics processing structure
+        systemBackgroundGraphicFrameLoopEngine(); // Boot real time spatial data visual overlay rendering pipeline
 
         /* =========================================================================
-           SECTION 2: GATEWAY PORTAL ROUTING SWITCHBOARD MECHANICS
+           OPERATIONS SECTOR B: AUTH REGISTRATION ACCESS PROTOCOL SWITCHBOARD CONTROLLERS
            ========================================================================= */
-        let applicationRegistrationStateMode = false;
+        let stateViewGatewayRegistrationActiveMode = false;
 
-        const gatewayControlWrapper = document.getElementById('gatewayControlWrapper');
-        const runtimeControlWrapper = document.getElementById('runtimeControlWrapper');
-        const appMainWindowUnit = document.getElementById('appMainWindowUnit');
-        const identityUserField = document.getElementById('identityUserField');
-        const gatewayDisplayHeader = document.getElementById('gatewayDisplayHeader');
-        const gatewayDisplaySubtext = document.getElementById('gatewayDisplaySubtext');
-        const gatewaySubmitTrigger = document.getElementById('gatewaySubmitTrigger');
-        const gatewayToggleWrapper = document.getElementById('gatewayToggleWrapper');
-        const windowDisplayTitle = document.getElementById('windowDisplayTitle');
-        const codeTextStreamArea = document.getElementById('codeTextStreamArea');
-        const editorCanvasLineCounters = document.getElementById('editorCanvasLineCounters');
+        const authGatewayStructuralWrapper = document.getElementById('authGatewayStructuralWrapper');
+        const runtimeWorkspaceStructuralWrapper = document.getElementById('runtimeWorkspaceStructuralWrapper');
+        const appRootWindowFrameBox = document.getElementById('appRootWindowFrameBox');
+        const formFieldIdentityUsernameNode = document.getElementById('formFieldIdentityUsernameNode');
+        const authGatewayMainHeadingTitleText = document.getElementById('authGatewayMainHeadingTitleText');
+        const authGatewaySubHeadingText = document.getElementById('authGatewaySubHeadingText');
+        const formSubmitActionTriggerButton = document.getElementById('formSubmitActionTriggerButton');
+        const formActionToggleViewFooterWrapper = document.getElementById('formActionToggleViewFooterWrapper');
+        const windowDisplayDynamicTitle = document.getElementById('windowDisplayDynamicTitle');
+        const workspaceCodeTextAreaStreamSource = document.getElementById('workspaceCodeTextAreaStreamSource');
+        const editorLineCounterCanvasGutter = document.getElementById('editorLineCounterCanvasGutter');
+        const formBrandingDynamicLogo = document.getElementById('formBrandingDynamicLogo');
+        const windowGlobalProfileLogo = document.getElementById('windowGlobalProfileLogo');
 
-        function switchGatewayInteractionMode() {
-            applicationRegistrationStateMode = !applicationRegistrationStateMode;
-            if (applicationRegistrationStateMode) {
-                gatewayDisplayHeader.innerText = "Provision Core Profile";
-                gatewayDisplaySubtext.innerText = "Allocate credentials inside the automated network directory.";
-                gatewaySubmitTrigger.innerText = "Register Profile Sequence";
-                identityUserField.classList.remove('hidden');
-                identityUserField.setAttribute('required', 'true');
-                gatewayToggleWrapper.innerHTML = `Registered user token instance? <span onclick='switchGatewayInteractionMode()'>Authorize Security Token</span>`;
+        function switchAuthenticationGatewayViewMode() {
+            stateViewGatewayRegistrationActiveMode = !stateViewGatewayRegistrationActiveMode;
+            if (stateViewGatewayRegistrationActiveMode) {
+                authGatewayMainHeadingTitleText.innerText = "Provision Core Profile";
+                authGatewaySubHeadingText.innerText = "Allocate credentials inside the automated network directory.";
+                formSubmitActionTriggerButton.innerText = "Register Profile Sequence";
+                formFieldIdentityUsernameNode.classList.remove('hidden');
+                formFieldIdentityUsernameNode.setAttribute('required', 'true');
+                formActionToggleViewFooterWrapper.innerHTML = `Registered user token instance? <span onclick='switchAuthenticationGatewayViewMode()'>Authorize Security Token</span>`;
+                
+                // Real theme changes when switching mode to represent alternative states dynamically
+                formBrandingDynamicLogo.style.borderColor = "var(--accent-green)";
+                formBrandingDynamicLogo.style.boxShadow = "0 0 30px rgba(0, 255, 136, 0.3)";
             } else {
-                gatewayDisplayHeader.innerText = "Security Clearance Required";
-                gatewayDisplaySubtext.innerText = "Establish link sequence to initialization node pipeline.";
-                gatewaySubmitTrigger.innerText = "Authorize Gateway Interface";
-                identityUserField.classList.add('hidden');
-                identityUserField.removeAttribute('required');
-                gatewayToggleWrapper.innerHTML = `New instance pipeline structure? <span onclick='switchGatewayInteractionMode()'>Provision Account Profile</span>`;
+                authGatewayMainHeadingTitleText.innerText = "Security Clearance Required";
+                authGatewaySubHeadingText.innerText = "Establish link sequence to initialization node pipeline.";
+                formSubmitActionTriggerButton.innerText = "Authorize Gateway Interface";
+                formFieldIdentityUsernameNode.classList.add('hidden');
+                formFieldIdentityUsernameNode.removeAttribute('required');
+                formActionToggleViewFooterWrapper.innerHTML = `New instance pipeline structure? <span onclick='switchAuthenticationGatewayViewMode()'>Provision Account Profile</span>`;
+                
+                formBrandingDynamicLogo.style.borderColor = "var(--accent-cyan)";
+                formBrandingDynamicLogo.style.boxShadow = "0 0 30px rgba(0, 168, 255, 0.3)";
             }
         }
 
-        function processAuthenticationGateway(event) {
+        function handleAuthenticationGatewayFormProcessing(event) {
             event.preventDefault();
 
-            // Fire physical micro-scaling transaction bounce animation
-            appMainWindowUnit.style.transform = "scale(0.95)";
-            appMainWindowUnit.style.opacity = "0";
+            // Run mechanical responsive spring bounce layout scale animations transform profiles
+            appRootWindowFrameBox.style.transform = "scale(0.94)";
+            appRootWindowFrameBox.style.opacity = "0";
 
             setTimeout(() => {
-                gatewayControlWrapper.style.display = "none";
-                runtimeControlWrapper.style.display = "grid";
-                windowDisplayTitle.innerText = "Require Hub v6 // Execution Engine Workspace";
-                appMainWindowUnit.style.transform = "scale(1)";
-                appMainWindowUnit.style.opacity = "1";
-                recalculateEditorLines();
-            }, 220);
+                authGatewayStructuralWrapper.style.display = "none";
+                runtimeWorkspaceStructuralWrapper.style.display = "grid";
+                windowDisplayDynamicTitle.innerText = "Require Hub v6 // Execution Engine Workspace";
+                appRootWindowFrameBox.style.transform = "scale(1)";
+                appRootWindowFrameBox.style.opacity = "1";
+                executeEditorCanvasLineNumbersRecalculation();
+            }, 240);
         }
 
-        function terminateActiveRuntime() {
-            appMainWindowUnit.style.transform = "scale(0.95)";
-            appMainWindowUnit.style.opacity = "0";
+        function disconnectSystemRuntimePipelineEngine() {
+            appRootWindowFrameBox.style.transform = "scale(0.94)";
+            appRootWindowFrameBox.style.opacity = "0";
 
             setTimeout(() => {
-                runtimeControlWrapper.style.display = "none";
-                gatewayControlWrapper.style.display = "flex";
-                windowDisplayTitle.innerText = "Require Hub v6 // Connection Portal";
-                appMainWindowUnit.style.transform = "scale(1)";
-                appMainWindowUnit.style.opacity = "1";
-            }, 220);
+                runtimeWorkspaceStructuralWrapper.style.display = "none";
+                authGatewayStructuralWrapper.style.display = "flex";
+                windowDisplayDynamicTitle.innerText = "Require Hub v6 // Connection Portal";
+                appRootWindowFrameBox.style.transform = "scale(1)";
+                appRootWindowFrameBox.style.opacity = "1";
+            }, 240);
         }
 
         /* =========================================================================
-           SECTION 3: REAL EXECUTOR ENGINE DEVELOPMENT CORE LOGIC
+           OPERATIONS SECTOR C: PRODUCTION EXECUTOR RUNTIME COMPILATION SUITE CONTROLLERS
            ========================================================================= */
-        const centralizedScriptProfileDatabase = {
+        const internalCentralAssetScriptDatabaseMatrix = {
             fe_kill: `-- Require Hub v6 Active Thread Script\nlocal KillEngineModule = require(7210491842)\nlocal TargetedUsers = {"TargetNameHere"}\n\nKillEngineModule:FireExecutionPayload(TargetedUsers)\nprint("FE Kill Sequence Completed Engine Process.")`,
             dex_explorer: `-- Secure Dex Explorer GUI v4 Integration\n-- Initializing Asset Injections...\n\nloadstring(game:HttpGet("https://raw.githubusercontent.com/infyield/source/master/main"))()\nwarn("Dex Explorer Stream Loaded Safely Into Environment Panel.")`,
             server_overload: `-- Warning: High Volatility Crash String Stack\nlocal MemoryTargetAlloc = require(1048103810)\n\ngame:GetService("RunService").Heartbeat:Connect(function()\n    for cycleIndex = 1, 1000 do\n        MemoryTargetAlloc:OverloadServerMemory()\n    end\nend)`,
@@ -658,108 +698,106 @@
             btools_injector: `-- Give Inventory Tools Workspace Action\nlocal ToolPatcher = require(5819384710):InitializeInventory()\n\nToolPatcher:AddToolToPlayer("Building Tools")\nToolPatcher:AddToolToPlayer("Delete Tool")`
         };
 
-        function injectSelectedProfileToCanvas(profileKeyId) {
-            if (centralizedScriptProfileDatabase[profileKeyId]) {
-                codeTextStreamArea.value = centralizedScriptProfileDatabase[profileKeyId];
-                recalculateEditorLines();
+        function pipeTargetAssetPayloadStringIntoEditor(payloadManifestRegistryKey) {
+            if (internalCentralAssetScriptDatabaseMatrix[payloadManifestRegistryKey]) {
+                workspaceCodeTextAreaStreamSource.value = internalCentralAssetScriptDatabaseMatrix[payloadManifestRegistryKey];
+                executeEditorCanvasLineNumbersRecalculation();
             }
         }
 
-        function flushTextStreamArea() {
-            codeTextStreamArea.value = "";
-            recalculateEditorLines();
+        function flushWorkspaceEditorTextAreaStream() {
+            workspaceCodeTextAreaStreamSource.value = "";
+            executeEditorCanvasLineNumbersRecalculation();
         }
 
-        function recalculateEditorLines() {
-            // Split up data structure strings to accurately render simulated line counts
-            const totalLinesCount = codeTextStreamArea.value.split('\n').length;
-            let generatedCounterBlocks = "";
-            for (let position = 1; position <= totalLinesCount; position++) {
-                generatedCounterBlocks += position + "<br>";
+        function executeEditorCanvasLineNumbersRecalculation() {
+            // Unpack line index markers splits array matrix loops matching text string allocations lengths
+            const totalRowBreakStringsLength = workspaceCodeTextAreaStreamSource.value.split('\n').length;
+            let counterIncrementalBlockMarkupStream = "";
+            for (let lineNumberCursor = 1; lineNumberCursor <= totalRowBreakStringsLength; lineNumberCursor++) {
+                counterIncrementalBlockMarkupStream += lineNumberCursor + "<br>";
             }
-            editorCanvasLineCounters.innerHTML = generatedCounterBlocks;
+            editorLineCounterCanvasGutter.innerHTML = counterIncrementalBlockMarkupStream;
         }
 
-        function executeCompiledPayload() {
-            if (codeTextStreamArea.value.trim() === "") {
+        function fireCompiledScriptPayloadStream() {
+            if (workspaceCodeTextAreaStreamSource.value.trim() === "") {
                 alert("Compilation failure: Main execution editor cache buffer is empty.");
                 return;
             }
             
-            const telemetryStatusString = document.getElementById('telemetryStatusString');
-            telemetryStatusString.innerText = "Injecting...";
-            telemetryStatusString.style.color = "#ffa502";
+            const telemetryDataStatusFeedbackStringLabel = document.getElementById('telemetryDataStatusFeedbackStringLabel');
+            telemetryDataStatusFeedbackStringLabel.innerText = "Injecting Script Thread...";
+            telemetryDataStatusFeedbackStringLabel.style.color = "var(--accent-yellow)";
 
             setTimeout(() => {
-                telemetryStatusString.innerText = "Injected Successfully";
-                telemetryStatusString.style.color = "#00ff88";
-                alert("Script Compiled. Payload injected directly into Roblox TaskScheduler memory allocations.");
-            }, 600);
+                telemetryDataStatusFeedbackStringLabel.innerText = "Injected Context Safely";
+                telemetryDataStatusFeedbackStringLabel.style.color = "var(--accent-green)";
+                alert("Script Compiled. Payload injected directly into TaskScheduler virtual memory stack spaces allocations matrix.");
+            }, 750);
         }
 
         /* =========================================================================
-           SECTION 4: COMPONENT DECORATION UTILITIES AND ACTIVE CORE HANDLERS
+           OPERATIONS SECTOR D: NAVIGATION MODAL CONTROLLERS & WINDOW MANAGEMENT WRAPPERS
            ========================================================================= */
-        function switchRuntimeModuleTab(elementRef, targetModeIdentifier) {
-            // Remove active style allocations from alternative nodes
-            const tabsArray = document.querySelectorAll('.ribbon-action-tab');
-            tabsArray.forEach(tabItem => tabItem.classList.remove('active'));
-            elementRef.classList.add('active');
+        function handleRuntimeNavigationModuleViewShift(tabElementDomReference, operationalViewModuleID) {
+            const structuralTabsNodeArrayList = document.querySelectorAll('.sidebar-action-tab-button');
+            structuralTabsNodeArrayList.forEach(activeNodeItem => activeNodeItem.classList.remove('active'));
+            tabElementDomReference.classList.add('active');
 
-            const manifestDeck = document.getElementById('assetsDirectoryDeckBox');
-            const directoryHeader = document.getElementById('directoryTreeHeader');
+            const directoryNodalManifestDeckContainer = document.getElementById('directoryNodalManifestDeckContainer');
 
-            // Handle workspace modifications based on active configuration arrays
-            if (targetModeIdentifier === 'executor') {
-                manifestDeck.innerHTML = `
-                    <div class="manifest-title-header" id="directoryTreeHeader">Local Script Cache</div>
-                    <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('fe_kill')">FE_Kill_Core_v2.lua</div>
-                    <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('dex_explorer')">Dex_Explorer_v4.txt</div>
-                    <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('server_overload')">Server_Overload_Stack.lua</div>
-                    <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('infinite_yield')">Infinite_Yield_Admin.lua</div>
-                    <div class="manifest-script-node" onclick="injectSelectedProfileToCanvas('orbit_hub')">Orbit_Glow_System.lua</div>
+            // Handle panel layout alterations on target tab selections tracking metrics indices arrays loops
+            if (operationalViewModuleID === 'executor') {
+                directoryNodalManifestDeckContainer.innerHTML = `
+                    <div class="directory-header-node-title" id="directorySectionHeaderLabel">Local Script Cache</div>
+                    <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('fe_kill')">FE_Kill_Core_v2.lua</div>
+                    <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('dex_explorer')">Dex_Explorer_v4.txt</div>
+                    <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('server_overload')">Server_Overload_Stack.lua</div>
+                    <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('infinite_yield')">Infinite_Yield_Admin.lua</div>
+                    <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('orbit_hub')">Orbit_Glow_System.lua</div>
                 `;
-            } else if (targetModeIdentifier === 'scripthub') {
-                manifestDeck.innerHTML = `
-                    <div class="manifest-title-header" id="directoryTreeHeader">Cloud Script Hub</div>
-                    <div class="manifest-script-node" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">Fly_GUI_Loader.lua</div>
-                    <div class="manifest-script-node" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">Aimbot_Universal.lua</div>
-                    <div class="manifest-script-node" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">ESP_Line_Draw.lua</div>
-                    <div class="manifest-script-node" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">Speed_Multiplier.txt</div>
+            } else if (operationalViewModuleID === 'scripthub') {
+                directoryNodalManifestDeckContainer.innerHTML = `
+                    <div class="directory-header-node-title" id="directorySectionHeaderLabel">Cloud Script Hub</div>
+                    <div class="directory-list-script-item" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">Fly_GUI_Loader.lua</div>
+                    <div class="directory-list-script-item" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">Aimbot_Universal.lua</div>
+                    <div class="directory-list-script-item" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">ESP_Line_Draw.lua</div>
+                    <div class="directory-list-script-item" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">Speed_Multiplier.txt</div>
                 `;
-            } else if (targetModeIdentifier === 'settings') {
-                manifestDeck.innerHTML = `
-                    <div class="manifest-title-header" id="directoryTreeHeader">Engine Options</div>
-                    <div class="manifest-script-node" onclick="alert('Anti-Crash Protections toggled: ACTIVE')">Anti-Crash Protect</div>
-                    <div class="manifest-script-node" onclick="alert('Auto-Attach Mode toggled: ON')">Auto-Attach Mode</div>
-                    <div class="manifest-script-node" onclick="alert('Console Redirection toggled: LOG')">Redirect Console Output</div>
+            } else if (operationalViewModuleID === 'settings') {
+                directoryNodalManifestDeckContainer.innerHTML = `
+                    <div class="directory-header-node-title" id="directorySectionHeaderLabel">Engine Options</div>
+                    <div class="directory-list-script-item" onclick="alert('Anti-Crash Protections toggled: ACTIVE')">Anti-Crash Protect</div>
+                    <div class="directory-list-script-item" onclick="alert('Auto-Attach Mode toggled: ON')">Auto-Attach Mode</div>
+                    <div class="directory-list-script-item" onclick="alert('Console Redirection toggled: LOG')">Redirect Console Output</div>
                 `;
             }
         }
 
-        // Mock window functions for immersive design feel
-        function closeApplicationWidget() {
-            if(confirm("Terminate Require Hub v6 core environment engine context?")) {
-                appMainWindowUnit.style.opacity = "0";
-                appMainWindowUnit.style.transform = "scale(0.8) translateY(30px)";
+        // Mock window UI optimization properties handlers wrappers systems
+        function closeApplicationContextFrame() {
+            if(confirm("Terminate Require Hub v6 core environment engine context? This completely purges local data buffers context stacks.")) {
+                appRootWindowFrameBox.style.opacity = "0";
+                appRootWindowFrameBox.style.transform = "scale(0.78) translateY(40px)";
             }
         }
 
-        function minimizeApplicationWidget() {
-            appMainWindowUnit.style.transform = "translateY(600px) scale(0.5)";
-            appMainWindowUnit.style.opacity = "0";
-            alert("App minimized to task system tray mimic box. Click anywhere on page to restore screen space allocations.");
+        function minimizeApplicationContextFrame() {
+            appRootWindowFrameBox.style.transform = "translateY(700px) scale(0.4)";
+            appRootWindowFrameBox.style.opacity = "0";
+            alert("App minimized to system task tray dashboard layout simulation. Simply perform click action patterns directly anywhere on page grid canvas space to restore memory frame allocations context.");
         }
 
-        window.addEventListener('click', (event) => {
-            if(appMainWindowUnit.style.opacity === "0" && !gatewayControlWrapper.contains(event.target) && appMainWindowUnit.style.transform.includes("translateY(600px)")) {
-                appMainWindowUnit.style.transform = "scale(1) translateY(0px)";
-                appMainWindowUnit.style.opacity = "1";
+        window.addEventListener('click', (surfaceClickEventTrackingContext) => {
+            if(appRootWindowFrameBox.style.opacity === "0" && !authGatewayStructuralWrapper.contains(surfaceClickEventTrackingContext.target) && appRootWindowFrameBox.style.transform.includes("translateY(700px)")) {
+                appRootWindowFrameBox.style.transform = "scale(1) translateY(0px)";
+                appRootWindowFrameBox.style.opacity = "1";
             }
         });
 
-        function maximizeApplicationWidget() {
-            alert("Viewport sizing configurations already perfectly optimized for execution matrix.");
+        function maximizeApplicationContextFrame() {
+            alert("Optimal execution view frame dimensions already achieved for code blocks parsing compilation.");
         }
     </script>
 </body>
