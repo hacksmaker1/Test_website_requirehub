@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Require Hub v6 — Custom Official Production Build</title>
+    <title>Require Hub v6 — Custom Roblox Executor</title>
     <style>
         /* =========================================================================
            1. CORE CONFIGURATIONS & BLACK-AND-BLUE THEME ENGINE
@@ -14,7 +14,6 @@
             --bg-glass-panel: rgba(6, 8, 14, 0.85); /* Smooth translucent dark blue-black */
             --bg-editor-canvas: #010205;      /* True black for high code contrast */
             --border-glow-cyan: rgba(0, 168, 255, 0.25); /* Vibrant blue border aura */
-            --border-glow-green: rgba(0, 255, 136, 0.2);
             --accent-cyan: #00a8ff;           /* Electric blue */
             --accent-cyan-hover: #3faeff;     /* Radiant blue highlight */
             --accent-green: #00ff88;
@@ -79,7 +78,7 @@
             background: var(--bg-glass-panel);
             backdrop-filter: blur(35px);
             -webkit-backdrop-filter: blur(35px);
-            border: 1px solid rgba(0, 168, 255, 0.15); /* Techy blue outer outline */
+            border: 1px solid rgba(0, 168, 255, 0.15); 
             border-radius: 14px;
             box-shadow: 0 40px 90px rgba(0, 0, 0, 0.95), 0 0 70px rgba(0, 168, 255, 0.06);
             color: var(--text-pure-white);
@@ -117,7 +116,6 @@
             text-transform: uppercase;
         }
 
-        /* Dynamic Image Logo Configuration */
         .topbar-identity-cluster img {
             width: 26px;
             height: 26px;
@@ -148,7 +146,7 @@
         .window-control-circle.max-proc { background: #27c93f; }
 
         /* =========================================================================
-           4. STAGE VIEWPORT 1: SECURE AUTHENTICATION SYSTEM (SMOOTH DARK)
+           4. STAGE VIEWPORT 1: SECURE AUTHENTICATION SYSTEM
            ========================================================================= */
         .auth-viewport-wrapper {
             display: flex;
@@ -160,7 +158,6 @@
             text-align: center;
         }
 
-        /* Logo Element Profile Image Box */
         .auth-branding-logo {
             width: 105px;
             height: 105px;
@@ -245,114 +242,17 @@
         .form-interactive-toggle-footer span:hover { text-decoration: underline; }
 
         /* =========================================================================
-           5. STAGE VIEWPORT 2: MAIN EXECUTOR WORKSPACE MODULES
+           5. STAGE VIEWPORT 2: SINGLE FULL-WIDTH ROBLOX EXECUTOR WORKSPACE
            ========================================================================= */
         .runtime-viewport-wrapper {
             display: none; 
             flex-grow: 1;
-            grid-template-columns: 85px 260px 1fr; /* Wider sidebar elements */
             height: calc(100% - 65px);
         }
 
-        /* SECTOR A: NAVIGATION ICON COLUMN SIDEBAR */
-        .ribbon-action-sidebar {
-            background: rgba(4, 5, 9, 0.9);
-            border-right: 1px solid rgba(0, 168, 255, 0.08);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 28px 0;
-            gap: 26px;
-        }
-
-        .sidebar-action-tab-button {
-            width: 48px;
-            height: 48px;
-            background: rgba(255, 255, 255, 0.01);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 10px;
-            color: var(--text-muted-gray);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        .sidebar-action-tab-button.active, .sidebar-action-tab-button:hover {
-            color: var(--accent-cyan);
-            border-color: var(--accent-cyan);
-            background: rgba(0, 168, 255, 0.06);
-            box-shadow: 0 0 16px rgba(0, 168, 255, 0.25);
-        }
-
-        .sidebar-action-tab-button.disconnect-kill-switch {
-            margin-top: auto;
-            color: var(--accent-red);
-            border-color: rgba(255, 71, 87, 0.2);
-        }
-        .sidebar-action-tab-button.disconnect-kill-switch:hover {
-            background: rgba(255, 71, 87, 0.12);
-            border-color: var(--accent-red);
-            box-shadow: 0 0 16px rgba(255, 71, 87, 0.3);
-        }
-
-        /* SECTOR B: DIRECTORY SCRIPTS LIST ARRAY PANELS */
-        .directory-manifest-panel {
-            background: rgba(2, 3, 6, 0.85);
-            border-right: 1px solid rgba(0, 168, 255, 0.08);
-            padding: 24px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            overflow-y: auto;
-        }
-
-        .directory-manifest-panel::-webkit-scrollbar {
-            width: 4px;
-        }
-        .directory-manifest-panel::-webkit-scrollbar-thumb {
-            background: rgba(0, 168, 255, 0.15);
-            border-radius: 10px;
-        }
-
-        .directory-header-node-title {
-            font-size: 0.75rem;
-            color: #4b6584;
-            text-transform: uppercase;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            padding-left: 8px;
-            margin-bottom: 12px;
-        }
-
-        .directory-list-script-item {
-            padding: 14px 18px;
-            background: rgba(0, 168, 255, 0.01);
-            border: 1px solid transparent;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            color: #e3edfa;
-            cursor: pointer;
-            text-align: left;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            transition: all 0.2s ease;
-        }
-
-        .directory-list-script-item:hover {
-            background: rgba(0, 168, 255, 0.03);
-            border-color: rgba(0, 168, 255, 0.15);
-            padding-left: 22px;
-            color: #ffffff;
-        }
-
-        /* SECTOR C: SCALED INDUSTRIAL DEVELOPMENT TEXT EDITOR CANVAS */
         .workspace-terminal-panel {
+            width: 100%;
+            height: 100%;
             padding: 24px;
             display: flex;
             flex-direction: column;
@@ -375,8 +275,8 @@
         .editor-line-number-gutter {
             text-align: right;
             font-family: var(--font-stack-code);
-            font-size: 1.05rem; /* Upgraded font sizing */
-            color: #1e2d42;     /* Clear blue-tinted gutters */
+            font-size: 1.05rem; 
+            color: #1e2d42;     
             line-height: 1.6;
             user-select: none;
         }
@@ -388,7 +288,7 @@
             outline: none;
             color: var(--accent-cyan);
             font-family: var(--font-stack-code);
-            font-size: 1.05rem; /* Upgraded code scaling size */
+            font-size: 1.05rem; 
             resize: none;
             line-height: 1.6;
             white-space: pre;
@@ -436,6 +336,16 @@
             box-shadow: 0 0 20px rgba(0, 168, 255, 0.45);
         }
 
+        .operation-execution-button.kill-switch-action {
+            border-color: rgba(255, 71, 87, 0.3);
+            color: var(--accent-red);
+        }
+
+        .operation-execution-button.kill-switch-action:hover {
+            background: rgba(255, 71, 87, 0.1);
+            border-color: var(--accent-red);
+        }
+
         .telemetry-stream-pipeline-status-text {
             font-size: 0.8rem;
             color: var(--text-muted-gray);
@@ -446,7 +356,7 @@
         }
 
         .telemetry-stream-pipeline-status-text span {
-            color: var(--accent-green);
+            color: var(--accent-cyan);
             font-weight: 700;
         }
 
@@ -466,7 +376,6 @@
         <!-- FRAME CONTROLLER HEADER DESKTOP BAR -->
         <div class="window-topbar-container">
             <div class="topbar-identity-cluster">
-                <!-- Change this src property link path to map out your real asset logo files -->
                 <img src="https://via.placeholder.com/50/00a8ff/ffffff?text=RH" alt="Require Hub Identity Hub Logo" id="windowGlobalProfileLogo">
                 <span id="windowDisplayDynamicTitle">Require Hub v6 // Connection Portal</span>
             </div>
@@ -499,45 +408,25 @@
         <!-- STAGE PORTAL VIEWPORT 2: PRODUCTION REAL RUNTIME DESKTOP COMPILATION WORKSPACE -->
         <div class="runtime-viewport-wrapper" id="runtimeWorkspaceStructuralWrapper">
             
-            <!-- SECTION COMPONENT A: SIDE BAR INTERACTION NAVIGATION STRIP STRUT -->
-            <div class="ribbon-action-sidebar">
-                <div class="sidebar-action-tab-button active" onclick="handleRuntimeNavigationModuleViewShift(this, 'executor')" title="Workspace Code Playground Engine">EXE</div>
-                <div class="sidebar-action-tab-button" onclick="handleRuntimeNavigationModuleViewShift(this, 'scripthub')" title="Central Cloud Index Scripts Hub Repository">HUB</div>
-                <div class="sidebar-action-tab-button" onclick="handleRuntimeNavigationModuleViewShift(this, 'settings')" title="Core System Environment Configurations">SET</div>
-                <div class="sidebar-action-tab-button disconnect-kill-switch" onclick="disconnectSystemRuntimePipelineEngine()" title="Disconnect Engine Pipeline Runtime Context">SYS</div>
-            </div>
-
-            <!-- SECTION COMPONENT B: LOCAL SCRIPTS TREE FILES DIRECTORY DIRECT NODE MANIFEST PANEL -->
-            <div class="directory-manifest-panel" id="directoryNodalManifestDeckContainer">
-                <div class="directory-header-node-title" id="directorySectionHeaderLabel">Local Script Cache</div>
-                <!-- Interactive Action Hooks Data Arrays Row items map hooks -->
-                <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('fe_kill')">FE_Kill_Core_v2.lua</div>
-                <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('dex_explorer')">Dex_Explorer_v4.txt</div>
-                <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('server_overload')">Server_Overload_Stack.lua</div>
-                <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('infinite_yield')">Infinite_Yield_Admin.lua</div>
-                <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('orbit_hub')">Orbit_Glow_System.lua</div>
-                
-                <!-- YOUR EMBEDDED CUSTOM SCRIPT LIST ITEM UI ELEMENT -->
-                <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('my_custom_script')">My_Custom_Script.lua</div>
-            </div>
-
-            <!-- SECTION COMPONENT C: LIVE WORKING MONACO CODE TERMINAL HOOK GRID FRAME PLAYGROUND -->
+            <!-- EXECUTOR WORKSPACE DISPLAY TERMINAL PANEL (FULL WIDTH) -->
             <div class="workspace-terminal-panel" id="workspaceEditorAreaViewWrapper">
                 <div class="workspace-editor-canvas-box">
-                    <!-- Real Dynamic Line-Numbers Column Index Tracking Array Block -->
-                    <div class="editor-line-number-gutter" id="editorLineCounterCanvasGutter">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17</div>
+                    <!-- Line-Numbers Column Tracking Index Gutter -->
+                    <div class="editor-line-number-gutter" id="editorLineCounterCanvasGutter">1<br>2<br>3<br>4<br>5</div>
                     
                     <!-- Text Area Processing Stream Vector Area Block -->
-                    <textarea id="workspaceCodeTextAreaStreamSource" spellcheck="false" oninput="executeEditorCanvasLineNumbersRecalculation()">-- Require Hub v6 Active Module Target Pipeline Loader&#10;local RequireEngine = require(8347104819)&#10;RequireEngine.load("MainServerEngine")</textarea>
+                    <textarea id="workspaceCodeTextAreaStreamSource" spellcheck="false" oninput="executeEditorCanvasLineNumbersRecalculation()">-- Require Hub v6 Official Roblox Executor Script Playground&#10;print("Executor Environment Loaded Successfully.")&#10;local Player = game:GetService("Players").LocalPlayer&#10;&#10;-- Paste or write your custom Roblox scripts below...</textarea>
                 </div>
 
                 <!-- Lower Function Buttons Operations Area Console Bar -->
                 <div class="workspace-operations-row">
                     <div class="operations-action-cluster-nodes">
-                        <button class="operation-execution-button primary-payload-fire" onclick="fireCompiledScriptPayloadStream()">Execute Script</button>
+                        <button class="operation-execution-button primary-payload-fire" onclick="fireCompiledScriptPayloadStream()">Execute</button>
                         <button class="operation-execution-button" onclick="flushWorkspaceEditorTextAreaStream()">Clear Canvas</button>
+                        <button class="operation-execution-button" onclick="attachToRobloxInstancePipeline()">Attach / Inject</button>
+                        <button class="operation-execution-button kill-switch-action" onclick="disconnectSystemRuntimePipelineEngine()">Logout</button>
                     </div>
-                    <div class="telemetry-stream-pipeline-status-text">Engine State: <span id="telemetryDataStatusFeedbackStringLabel">Ready to Inject</span></div>
+                    <div class="telemetry-stream-pipeline-status-text">Engine Connection State: <span id="telemetryDataStatusFeedbackStringLabel">Ready to Attach</span></div>
                 </div>
             </div>
 
@@ -614,6 +503,7 @@
            OPERATIONS SECTOR B: AUTHENTICATION INTERACTION CONTROLLERS SWITCH HOOKS
            ========================================================================= */
         let stateViewGatewayRegistrationActiveMode = false;
+        let isAttachedToRobloxInstanceEngine = false;
 
         const authGatewayStructuralWrapper = document.getElementById('authGatewayStructuralWrapper');
         const runtimeWorkspaceStructuralWrapper = document.getElementById('runtimeWorkspaceStructuralWrapper');
@@ -627,6 +517,7 @@
         const workspaceCodeTextAreaStreamSource = document.getElementById('workspaceCodeTextAreaStreamSource');
         const editorLineCounterCanvasGutter = document.getElementById('editorLineCounterCanvasGutter');
         const formBrandingDynamicLogo = document.getElementById('formBrandingDynamicLogo');
+        const telemetryDataStatusFeedbackStringLabel = document.getElementById('telemetryDataStatusFeedbackStringLabel');
 
         function switchAuthenticationGatewayViewMode() {
             stateViewGatewayRegistrationActiveMode = !stateViewGatewayRegistrationActiveMode;
@@ -661,7 +552,7 @@
 
             setTimeout(() => {
                 authGatewayStructuralWrapper.style.display = "none";
-                runtimeWorkspaceStructuralWrapper.style.display = "grid";
+                runtimeWorkspaceStructuralWrapper.style.display = "block";
                 windowDisplayDynamicTitle.innerText = "Require Hub v6 // Execution Engine Workspace — Second Branch Official";
                 appRootWindowFrameBox.style.transform = "scale(1)";
                 appRootWindowFrameBox.style.opacity = "1";
@@ -679,30 +570,17 @@
                 windowDisplayDynamicTitle.innerText = "Require Hub v6 // Connection Portal";
                 appRootWindowFrameBox.style.transform = "scale(1)";
                 appRootWindowFrameBox.style.opacity = "1";
+                
+                // Reset Inject Status
+                isAttachedToRobloxInstanceEngine = false;
+                telemetryDataStatusFeedbackStringLabel.innerText = "Ready to Attach";
+                telemetryDataStatusFeedbackStringLabel.style.color = "var(--accent-cyan)";
             }, 240);
         }
 
         /* =========================================================================
-           OPERATIONS SECTOR C: DESKTOP CENTRALIZED SYSTEM ASSET SCRIPTS SOURCE STORAGE
+           OPERATIONS SECTOR C: LIVE CODE TERMINAL & EXECUTION INTERFACE ENGINE
            ========================================================================= */
-        const internalCentralAssetScriptDatabaseMatrix = {
-            fe_kill: `-- Require Hub v6 Active Thread Script\nlocal KillEngineModule = require(7210491842)\nlocal TargetedUsers = {"TargetNameHere"}\n\nKillEngineModule:FireExecutionPayload(TargetedUsers)\nprint("FE Kill Sequence Completed Engine Process.")`,
-            dex_explorer: `-- Secure Dex Explorer GUI v4 Integration\n-- Initializing Asset Injections...\n\nloadstring(game:HttpGet("https://raw.githubusercontent.com/infyield/source/master/main"))()\nwarn("Dex Explorer Stream Loaded Safely Into Environment Panel.")`,
-            server_overload: `-- Warning: High Volatility Crash String Stack\nlocal MemoryTargetAlloc = require(1048103810)\n\ngame:GetService("RunService").Heartbeat:Connect(function()\n    for cycleIndex = 1, 1000 do\n        MemoryTargetAlloc:OverloadServerMemory()\n    end\nend)`,
-            infinite_yield: `-- Core Infinite Yield Admin System Loader Link\nlocal AdminFetchSystem = require(3847104910):FetchModuleSystem()\n\nAdminFetchSystem.LoadConsole()\nprint("Command Line Array System Hooks Active.")`,
-            orbit_hub: `-- Glowing Cosmetic Character Orbit Hub System\nlocal ParticleOrbitEngine = require(9384710294):BootOrbitModule()\n\nParticleOrbitEngine:SetGlowColor(Color3.fromRGB(0, 168, 255))\nParticleOrbitEngine:AttachToCharacter(game.Players.LocalPlayer.Character)`,
-            
-            // YOUR EMBEDDED CUSTOM RUNTIME SCRIPT HOOK DATA MATRIX TARGET
-            my_custom_script: `-- Official Custom Branch Module Script Loaded\nprint("Hello from the secondary official portal framework pipeline!")\nlocal customProfileEngine = require(1234567890)\ncustomProfileEngine:Initialize()`
-        };
-
-        function pipeTargetAssetPayloadStringIntoEditor(payloadManifestRegistryKey) {
-            if (internalCentralAssetScriptDatabaseMatrix[payloadManifestRegistryKey]) {
-                workspaceCodeTextAreaStreamSource.value = internalCentralAssetScriptDatabaseMatrix[payloadManifestRegistryKey];
-                executeEditorCanvasLineNumbersRecalculation();
-            }
-        }
-
         function flushWorkspaceEditorTextAreaStream() {
             workspaceCodeTextAreaStreamSource.value = "";
             executeEditorCanvasLineNumbersRecalculation();
@@ -717,62 +595,46 @@
             editorLineCounterCanvasGutter.innerHTML = counterIncrementalBlockMarkupStream;
         }
 
+        function attachToRobloxInstancePipeline() {
+            if (isAttachedToRobloxInstanceEngine) {
+                alert("Engine Notification: Thread pipeline already attached to active process.");
+                return;
+            }
+
+            telemetryDataStatusFeedbackStringLabel.innerText = "Attaching DLL Link...";
+            telemetryDataStatusFeedbackStringLabel.style.color = "var(--accent-yellow)";
+
+            setTimeout(() => {
+                isAttachedToRobloxInstanceEngine = true;
+                telemetryDataStatusFeedbackStringLabel.innerText = "Attached to Roblox Process";
+                telemetryDataStatusFeedbackStringLabel.style.color = "var(--accent-green)";
+            }, 1200);
+        }
+
         function fireCompiledScriptPayloadStream() {
+            if (!isAttachedToRobloxInstanceEngine) {
+                alert("Execution Error: You must Attach/Inject the executor into the process environment before compiled strings can run.");
+                return;
+            }
+
             if (workspaceCodeTextAreaStreamSource.value.trim() === "") {
                 alert("Compilation failure: Main execution editor cache buffer is empty.");
                 return;
             }
             
-            const telemetryDataStatusFeedbackStringLabel = document.getElementById('telemetryDataStatusFeedbackStringLabel');
-            telemetryDataStatusFeedbackStringLabel.innerText = "Injecting Script Thread...";
+            telemetryDataStatusFeedbackStringLabel.innerText = "Running script payload thread...";
             telemetryDataStatusFeedbackStringLabel.style.color = "var(--accent-yellow)";
 
             setTimeout(() => {
-                telemetryDataStatusFeedbackStringLabel.innerText = "Injected Context Safely";
+                telemetryDataStatusFeedbackStringLabel.innerText = "Attached to Roblox Process";
                 telemetryDataStatusFeedbackStringLabel.style.color = "var(--accent-green)";
-                alert("Script Compiled. Payload injected directly into TaskScheduler virtual memory stack spaces allocations matrix.");
-            }, 750);
+                alert("Script Compiled. Payload injected directly into active Roblox Environment via pipeline.");
+            }, 500);
         }
 
-        /* =========================================================================
-           OPERATIONS SECTOR D: TABS NAVIGATION VIEW SWITCHBOARDS
-           ========================================================================= */
-        function handleRuntimeNavigationModuleViewShift(tabElementDomReference, operationalViewModuleID) {
-            const structuralTabsNodeArrayList = document.querySelectorAll('.sidebar-action-tab-button');
-            structuralTabsNodeArrayList.forEach(activeNodeItem => activeNodeItem.classList.remove('active'));
-            tabElementDomReference.classList.add('active');
-
-            const directoryNodalManifestDeckContainer = document.getElementById('directoryNodalManifestDeckContainer');
-
-            if (operationalViewModuleID === 'executor') {
-                directoryNodalManifestDeckContainer.innerHTML = `
-                    <div class="directory-header-node-title" id="directorySectionHeaderLabel">Local Script Cache</div>
-                    <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('fe_kill')">FE_Kill_Core_v2.lua</div>
-                    <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('dex_explorer')">Dex_Explorer_v4.txt</div>
-                    <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('server_overload')">Server_Overload_Stack.lua</div>
-                    <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('infinite_yield')">Infinite_Yield_Admin.lua</div>
-                    <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('orbit_hub')">Orbit_Glow_System.lua</div>
-                    <div class="directory-list-script-item" onclick="pipeTargetAssetPayloadStringIntoEditor('my_custom_script')">My_Custom_Script.lua</div>
-                `;
-            } else if (operationalViewModuleID === 'scripthub') {
-                directoryNodalManifestDeckContainer.innerHTML = `
-                    <div class="directory-header-node-title" id="directorySectionHeaderLabel">Cloud Script Hub</div>
-                    <div class="directory-list-script-item" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">Fly_GUI_Loader.lua</div>
-                    <div class="directory-list-script-item" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">Aimbot_Universal.lua</div>
-                    <div class="directory-list-script-item" onclick="alert('Profile requires Premium Access Key to download from cloud database.')">ESP_Line_Draw.lua</div>
-                `;
-            } else if (operationalViewModuleID === 'settings') {
-                directoryNodalManifestDeckContainer.innerHTML = `
-                    <div class="directory-header-node-title" id="directorySectionHeaderLabel">Engine Options</div>
-                    <div class="directory-list-script-item" onclick="alert('Anti-Crash Protections toggled: ACTIVE')">Anti-Crash Protect</div>
-                    <div class="directory-list-script-item" onclick="alert('Auto-Attach Mode toggled: ON')">Auto-Attach Mode</div>
-                `;
-            }
-        }
-
-        // Window interaction scaling mimics layout
+        // Window interaction scaling controls
         function closeApplicationContextFrame() {
-            if(confirm("Terminate Require Hub v6 core environment engine context?")) {
+            if(confirm("Terminate executor environment framework engine process?")) {
                 appRootWindowFrameBox.style.opacity = "0";
                 appRootWindowFrameBox.style.transform = "scale(0.82) translateY(45px)";
             }
